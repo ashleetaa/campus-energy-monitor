@@ -62,20 +62,12 @@ recommends a fix. The pitch uses the dollar amount the app calculates.
 ## Progress
 (Claude: after each step, update this list: what's done, what files matter,
 anything I decided. Keep it under 10 lines.)
-- Step 0 done: Vite 8 + React 19 + TS + Tailwind v4 (`@tailwindcss/vite`, no config
-  file) + Recharts 3. Removed the template's oxlint and demo files. Node 26.
-- Key files: `vite.config.ts`, `src/main.tsx`, `src/App.tsx` (placeholder), `src/index.css`.
-- Decided: spike is always Engineering Hall, overnight 10pm–6am; Reset button added;
-  savings = sum of open recommendations; no 18% claim in the pitch.
-- Step 1 done: dashboard with 4 cards (kW now, kWh today, cost today), updates every 3s.
-  `data/buildings.ts` (peak kW + 24-hour pattern), `data/simulate.ts` (math),
-  `data/format.ts`, `hooks/useEnergyData.ts` (3s timer), `components/BuildingCard.tsx`.
-- Step 2 done: click a card → `components/BuildingDetail.tsx`, a rolling last-24-hours
-  chart vs. same hours last week, plus cost of each. History uses a fixed ±4% wobble.
-- Step 3 done: `spikeOn` lives in `useEnergyData`; `simulate.ts` adds 40% to Engineering
-  Hall 10pm–6am (`isSpiked`). Chart shades it red; `components/DemoControls.tsx` (bottom-right).
-- Step 4 done: `data/alerts.ts` flags hours ≥30% above last week, cost/day ×30 ×365.
-  `components/AlertBanner.tsx` on dashboard + detail; red card. History wobble now ±3%.
-- Step 5 done: `data/recommendations.ts` (3 fixes). Decided: marking the main fix (HVAC
-  setback) done ends the spike → green `ResolvedBanner`; other 2 are extra savings.
-  `RecommendationList.tsx` on the detail screen; `doneIds` in the hook; Reset clears all.
+- All steps 0–6 done. Vite 8 + React 19 + TS + Tailwind v4 (`@tailwindcss/vite`) + Recharts 3.
+- `src/data/`: `buildings.ts` (peak kW + 24-hour pattern), `simulate.ts` (kW/kWh/cost, spike,
+  last 24h vs last week, fixed ±3% history wobble), `alerts.ts` (≥30% hours, $/day ×30 ×365),
+  `recommendations.ts` (3 fixes), `format.ts`. `src/hooks/useEnergyData.ts`: 3s timer + demo state.
+- `src/components/`: BuildingCard, BuildingDetail (chart), AlertBanner, RecommendationList,
+  ResolvedBanner, SavingsSummary, DemoControls. `App.tsx` switches dashboard ↔ detail.
+- Decided: spike is always Engineering Hall 10pm–6am, +40%. Marking the main fix (HVAC setback)
+  done ends the spike → green banner. Savings available = open fixes, achieved = done fixes.
+- Demo controls (Simulate spike, Reset) sit bottom-right. No 18% claim; pitch the app's dollars.

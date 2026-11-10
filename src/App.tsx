@@ -8,6 +8,7 @@ import BuildingDetail from './components/BuildingDetail'
 import DemoControls from './components/DemoControls'
 import RecommendationList from './components/RecommendationList'
 import ResolvedBanner from './components/ResolvedBanner'
+import SavingsSummary from './components/SavingsSummary'
 import { MAIN_FIX_ID } from './data/recommendations'
 import { useEnergyData } from './hooks/useEnergyData'
 
@@ -62,6 +63,8 @@ export default function App() {
         </BuildingDetail>
       ) : (
         <>
+          <SavingsSummary recommendations={recommendations} doneIds={energy.doneIds} />
+
           {alerts.map((alert) => (
             <AlertBanner
               key={alert.building.id}
