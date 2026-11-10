@@ -1,7 +1,17 @@
 // The detail screen for one building: a 24-hour line chart of power use,
 // compared with the same hours last week.
 
-import { CartesianGrid, Legend, Line, LineChart, ResponsiveContainer, Tooltip, XAxis, YAxis } from 'recharts'
+import {
+  CartesianGrid,
+  Legend,
+  Line,
+  LineChart,
+  ReferenceArea,
+  ResponsiveContainer,
+  Tooltip,
+  XAxis,
+  YAxis,
+} from 'recharts'
 import type { Building } from '../data/buildings'
 import { formatDollars, formatKw } from '../data/format'
 import { costOf, last24Hours, totalKwh } from '../data/simulate'
@@ -9,16 +19,23 @@ import { costOf, last24Hours, totalKwh } from '../data/simulate'
 type Props = {
   building: Building
   now: Date
+  spikeOn: boolean
   onBack: () => void
 }
 
 const THIS_WEEK_COLOR = '#2563eb' // blue
 const LAST_WEEK_COLOR = '#94a3b8' // gray: the "normal" baseline
 
-export default function BuildingDetail({ building, now, onBack }: Props) {
-  const points = last24Hours(building, now)
+export default function BuildingDetail({ building, now, spikeOn, onBack }: Props) {
+  const points = last24Hours(building, now, spikeOn)
   const costThisWeek = costOf(totalKwh(points, 'thisWeek'))
   const costLastWeek = costOf(totalKwh(points, 'lastWeek'))
+
+  // Where to shade the spike: from the first spiked hour to the hour after
+  // the last spiked hour (e.g. 10pm to 6am). -1 means no spike on this chart.
+  const firstSpiked = points.findIndex((point) => point.spiked)
+  const lastSpiked = points.findLastIndex((point) => point.spiked)
+  const shadeEnd = Math.min(lastSpiked + 1, points.length - 1)
 
   return (
     <div>
@@ -46,6 +63,15 @@ export default function BuildingDetail({ building, now, onBack }: Props) {
           <ResponsiveContainer width="100%" height="100%">
             <LineChart data={points} margin={{ top: 5, right: 20, bottom: 5, left: 10 }}>
               <CartesianGrid stroke="#e2e8f0" vertical={false} />
+              {firstSpiked !== -1 && (
+                <ReferenceArea
+                  x1={points[firstSpiked].label}
+                  x2={points[shadeEnd].label}
+                  fill="#fee2e2"
+                  fillOpacity={0.8}
+                  label={{ value: 'HVAC ran overnight', position: 'insideTop', fill: '#b91c1c', fontSize: 12 }}
+                />
+              )}
               <XAxis dataKey="label" tick={{ fontSize: 12, fill: '#64748b' }} interval={2} />
               <YAxis
                 tick={{ fontSize: 12, fill: '#64748b' }}

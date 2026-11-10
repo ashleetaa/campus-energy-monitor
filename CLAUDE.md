@@ -24,16 +24,23 @@ All data is simulated in the browser.
    higher by day and lower at night.
 2. Building detail: click a building to see a 24-hour line chart vs. the same hours
    last week.
-3. "Simulate spike" button: Engineering Hall's HVAC was left running last night,
-   10pm–6am, about 40% above normal for those hours. It shows up in the overnight
-   part of the 24-hour chart. A small "Reset" button undoes the spike.
+3. "Simulate spike": Engineering Hall's HVAC was left running last night,
+   10pm–6am, about 40% above normal for those hours. On the 24-hour chart that
+   window is shaded light red and labeled "HVAC ran overnight". "Simulate spike"
+   and "Reset" sit in a small "Demo controls" box in the bottom corner, so the
+   main screen looks like a real product.
 4. Spike alert: appears when "Simulate spike" is clicked. It fires when usage is 30%+
-   above the same hours last week, and shows a red alert with the extra cost per day
-   and per month.
+   above the same hours last week. A red banner at the top of the dashboard shows
+   the extra cost per day, per month and per year, and links to the building's
+   chart. The affected card gets a red border and a "Needs attention" label.
 5. 2–3 recommendations per alert with estimated monthly savings
-   (e.g. "Schedule HVAC setback 10pm–6am: saves ~$X/month").
-6. A "Monthly savings" summary at the top of the dashboard = savings available from
-   the current recommendations ($0 when there are no alerts).
+   (e.g. "Schedule HVAC setback 10pm–6am: saves ~$X/month"). Each has a
+   "Mark as done" button; when done, the building goes back to normal.
+6. A "Monthly savings" summary at the top of the dashboard: savings available
+   (from open recommendations) and savings achieved (from ones marked done).
+
+Demo flow: normal dashboard → Simulate spike → red banner + red card → click into
+the chart (shaded overnight) → recommendations → Mark as done → savings achieved.
 
 ## Demo story
 A campus facilities manager wants to know where the energy money goes. The app shows
@@ -65,3 +72,5 @@ anything I decided. Keep it under 10 lines.)
   `data/format.ts`, `hooks/useEnergyData.ts` (3s timer), `components/BuildingCard.tsx`.
 - Step 2 done: click a card → `components/BuildingDetail.tsx`, a rolling last-24-hours
   chart vs. same hours last week, plus cost of each. History uses a fixed ±4% wobble.
+- Step 3 done: `spikeOn` lives in `useEnergyData`; `simulate.ts` adds 40% to Engineering
+  Hall 10pm–6am (`isSpiked`). Chart shades it red; `components/DemoControls.tsx` (bottom-right).
