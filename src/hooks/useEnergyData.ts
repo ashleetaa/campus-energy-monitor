@@ -5,6 +5,7 @@
 
 import { useEffect, useState } from 'react'
 import { BUILDINGS, type Building } from '../data/buildings'
+import { findAlerts } from '../data/alerts'
 import { costOf, currentKw, todayKwh } from '../data/simulate'
 
 const UPDATE_EVERY_MS = 3000
@@ -33,6 +34,7 @@ export function useEnergyData() {
   return {
     now,
     readings,
+    alerts: findAlerts(now, spikeOn),
     spikeOn,
     simulateSpike: () => setSpikeOn(true),
     reset: () => setSpikeOn(false),

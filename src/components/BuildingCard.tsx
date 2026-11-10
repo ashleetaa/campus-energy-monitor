@@ -6,17 +6,26 @@ import { formatDollars, formatKw, formatKwh } from '../data/format'
 
 type Props = {
   reading: Reading
+  needsAttention: boolean // true when this building has an alert
   onClick: () => void // opens this building's detail screen
 }
 
-export default function BuildingCard({ reading, onClick }: Props) {
+export default function BuildingCard({ reading, needsAttention, onClick }: Props) {
   const { building, kw, kwh, cost } = reading
+  const border = needsAttention
+    ? 'border-2 border-red-500 hover:border-red-600'
+    : 'border border-slate-200 hover:border-blue-400'
 
   return (
     <button
       onClick={onClick}
-      className="rounded-xl border border-slate-200 bg-white p-5 text-left shadow-sm transition hover:border-blue-400 hover:shadow-md"
+      className={`rounded-xl bg-white p-5 text-left shadow-sm transition hover:shadow-md ${border}`}
     >
+      {needsAttention && (
+        <p className="mb-2 inline-block rounded-full bg-red-100 px-2.5 py-0.5 text-xs font-semibold text-red-700">
+          ⚠ Needs attention
+        </p>
+      )}
       <h2 className="text-lg font-semibold text-slate-900">{building.name}</h2>
       <p className="text-sm text-slate-500">{building.description}</p>
 

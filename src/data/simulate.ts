@@ -68,14 +68,16 @@ export function costOf(kwh: number): number {
 const ONE_HOUR_MS = 60 * 60 * 1000
 const ONE_WEEK_MS = 7 * 24 * ONE_HOUR_MS
 
-// A small ±4% variation for past hours that is always the same for the same
+// A small ±3% variation for past hours that is always the same for the same
 // building and hour. It's "random-looking" but fixed (from a sine wave), so
 // the history chart looks identical every time the page loads.
+// ±3% keeps normal hours well under the 30% alert line, and every spiked
+// hour (40% extra) well over it.
 function steadyWobble(building: Building, time: Date): number {
   const seed = time.getTime() / ONE_HOUR_MS + building.peakKw
   const x = Math.sin(seed) * 10000
   const fraction = x - Math.floor(x) // a number between 0 and 1
-  return 1 + (fraction * 0.08 - 0.04)
+  return 1 + (fraction * 0.06 - 0.03)
 }
 
 // Recorded power (kW) for an hour in the past.

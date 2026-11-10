@@ -74,3 +74,5 @@ anything I decided. Keep it under 10 lines.)
   chart vs. same hours last week, plus cost of each. History uses a fixed ±4% wobble.
 - Step 3 done: `spikeOn` lives in `useEnergyData`; `simulate.ts` adds 40% to Engineering
   Hall 10pm–6am (`isSpiked`). Chart shades it red; `components/DemoControls.tsx` (bottom-right).
+- Step 4 done: `data/alerts.ts` flags hours ≥30% above last week, cost/day ×30 ×365.
+  `components/AlertBanner.tsx` on dashboard + detail; red card. History wobble now ±3%.
