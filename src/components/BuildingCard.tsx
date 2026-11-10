@@ -4,11 +4,19 @@
 import type { Reading } from '../hooks/useEnergyData'
 import { formatDollars, formatKw, formatKwh } from '../data/format'
 
-export default function BuildingCard({ reading }: { reading: Reading }) {
+type Props = {
+  reading: Reading
+  onClick: () => void // opens this building's detail screen
+}
+
+export default function BuildingCard({ reading, onClick }: Props) {
   const { building, kw, kwh, cost } = reading
 
   return (
-    <div className="rounded-xl border border-slate-200 bg-white p-5 shadow-sm">
+    <button
+      onClick={onClick}
+      className="rounded-xl border border-slate-200 bg-white p-5 text-left shadow-sm transition hover:border-blue-400 hover:shadow-md"
+    >
       <h2 className="text-lg font-semibold text-slate-900">{building.name}</h2>
       <p className="text-sm text-slate-500">{building.description}</p>
 
@@ -25,6 +33,8 @@ export default function BuildingCard({ reading }: { reading: Reading }) {
           <p className="text-lg font-semibold text-slate-900 tabular-nums">{formatDollars(cost)}</p>
         </div>
       </div>
-    </div>
+
+      <p className="mt-4 text-sm font-medium text-blue-700">View 24-hour history →</p>
+    </button>
   )
 }

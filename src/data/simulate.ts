@@ -43,3 +43,52 @@ export function todayKwh(building: Building, now: Date): number {
 export function costOf(kwh: number): number {
   return kwh * PRICE_PER_KWH
 }
+
+const ONE_HOUR_MS = 60 * 60 * 1000
+const ONE_WEEK_MS = 7 * 24 * ONE_HOUR_MS
+
+// A small ±4% variation for past hours that is always the same for the same
+// building and hour. It's "random-looking" but fixed (from a sine wave), so
+// the history chart looks identical every time the page loads.
+function steadyWobble(building: Building, time: Date): number {
+  const seed = time.getTime() / ONE_HOUR_MS + building.peakKw
+  const x = Math.sin(seed) * 10000
+  const fraction = x - Math.floor(x) // a number between 0 and 1
+  return 1 + (fraction * 0.08 - 0.04)
+}
+
+// Recorded power (kW) for an hour in the past.
+export function pastKwAt(building: Building, time: Date): number {
+  return normalKwAt(building, time) * steadyWobble(building, time)
+}
+
+export type HourPoint = {
+  label: string // e.g. "10pm"
+  thisWeek: number // kW at that hour in the last 24 hours
+  lastWeek: number // kW at the same hour 7 days earlier
+}
+
+// The last 24 hours, one point per hour (oldest first), each paired with
+// the same hour one week earlier.
+export function last24Hours(building: Building, now: Date): HourPoint[] {
+  const thisHour = new Date(now)
+  thisHour.setMinutes(0, 0, 0)
+
+  const points: HourPoint[] = []
+  for (let hoursAgo = 23; hoursAgo >= 0; hoursAgo--) {
+    const time = new Date(thisHour.getTime() - hoursAgo * ONE_HOUR_MS)
+    const weekBefore = new Date(time.getTime() - ONE_WEEK_MS)
+    points.push({
+      label: time.toLocaleTimeString('en-US', { hour: 'numeric' }).replace(' ', '').toLowerCase(),
+      thisWeek: Math.round(pastKwAt(building, time)),
+      lastWeek: Math.round(pastKwAt(building, weekBefore)),
+    })
+  }
+  return points
+}
+
+// Total energy (kWh) for a list of hourly points: each point is ~1 hour at
+// that power, so kWh = sum of kW × 1 hour.
+export function totalKwh(points: HourPoint[], week: 'thisWeek' | 'lastWeek'): number {
+  return points.reduce((sum, point) => sum + point[week], 0)
+}

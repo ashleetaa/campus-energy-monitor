@@ -63,3 +63,5 @@ anything I decided. Keep it under 10 lines.)
 - Step 1 done: dashboard with 4 cards (kW now, kWh today, cost today), updates every 3s.
   `data/buildings.ts` (peak kW + 24-hour pattern), `data/simulate.ts` (math),
   `data/format.ts`, `hooks/useEnergyData.ts` (3s timer), `components/BuildingCard.tsx`.
+- Step 2 done: click a card → `components/BuildingDetail.tsx`, a rolling last-24-hours
+  chart vs. same hours last week, plus cost of each. History uses a fixed ±4% wobble.

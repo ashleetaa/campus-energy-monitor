@@ -1,10 +1,16 @@
-// The main screen: a header and one card per building.
+// The main screen. Shows either the dashboard (all 4 buildings) or one
+// building's detail, depending on which building is selected.
 
+import { useState } from 'react'
 import BuildingCard from './components/BuildingCard'
+import BuildingDetail from './components/BuildingDetail'
 import { useEnergyData } from './hooks/useEnergyData'
 
 export default function App() {
   const { now, readings } = useEnergyData()
+  // null = show the dashboard; otherwise the id of the building to show
+  const [selectedId, setSelectedId] = useState<string | null>(null)
+  const selected = readings.find((reading) => reading.building.id === selectedId)
 
   return (
     <main className="min-h-screen bg-slate-50 p-6 md:p-10">
@@ -15,11 +21,19 @@ export default function App() {
         </p>
       </header>
 
-      <div className="grid gap-6 sm:grid-cols-2 xl:grid-cols-4">
-        {readings.map((reading) => (
-          <BuildingCard key={reading.building.id} reading={reading} />
-        ))}
-      </div>
+      {selected ? (
+        <BuildingDetail building={selected.building} now={now} onBack={() => setSelectedId(null)} />
+      ) : (
+        <div className="grid gap-6 sm:grid-cols-2 xl:grid-cols-4">
+          {readings.map((reading) => (
+            <BuildingCard
+              key={reading.building.id}
+              reading={reading}
+              onClick={() => setSelectedId(reading.building.id)}
+            />
+          ))}
+        </div>
+      )}
     </main>
   )
 }
