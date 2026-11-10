@@ -1,6 +1,8 @@
 // The detail screen for one building: a 24-hour line chart of power use,
-// compared with the same hours last week.
+// compared with the same hours last week. Anything passed in as children
+// (alert, fixes) is shown above the chart, so the money comes first.
 
+import type { ReactNode } from 'react'
 import {
   CartesianGrid,
   Legend,
@@ -12,24 +14,22 @@ import {
   XAxis,
   YAxis,
 } from 'recharts'
-import type { Alert } from '../data/alerts'
 import type { Building } from '../data/buildings'
 import { formatDollars, formatKw } from '../data/format'
 import { costOf, last24Hours, totalKwh } from '../data/simulate'
-import AlertBanner from './AlertBanner'
 
 type Props = {
   building: Building
   now: Date
   spikeOn: boolean
-  alert?: Alert // this building's alert, if it has one
   onBack: () => void
+  children?: ReactNode
 }
 
 const THIS_WEEK_COLOR = '#2563eb' // blue
 const LAST_WEEK_COLOR = '#94a3b8' // gray: the "normal" baseline
 
-export default function BuildingDetail({ building, now, spikeOn, alert, onBack }: Props) {
+export default function BuildingDetail({ building, now, spikeOn, onBack, children }: Props) {
   const points = last24Hours(building, now, spikeOn)
   const costThisWeek = costOf(totalKwh(points, 'thisWeek'))
   const costLastWeek = costOf(totalKwh(points, 'lastWeek'))
@@ -49,11 +49,7 @@ export default function BuildingDetail({ building, now, spikeOn, alert, onBack }
       <h2 className="text-2xl font-bold text-slate-900">{building.name}</h2>
       <p className="text-slate-500">{building.description}</p>
 
-      {alert && (
-        <div className="mt-6">
-          <AlertBanner alert={alert} />
-        </div>
-      )}
+      {children && <div className="mt-6">{children}</div>}
 
       <div className="mt-6 grid max-w-md grid-cols-2 gap-4">
         <div>

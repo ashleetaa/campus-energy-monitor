@@ -76,3 +76,6 @@ anything I decided. Keep it under 10 lines.)
   Hall 10pm–6am (`isSpiked`). Chart shades it red; `components/DemoControls.tsx` (bottom-right).
 - Step 4 done: `data/alerts.ts` flags hours ≥30% above last week, cost/day ×30 ×365.
   `components/AlertBanner.tsx` on dashboard + detail; red card. History wobble now ±3%.
+- Step 5 done: `data/recommendations.ts` (3 fixes). Decided: marking the main fix (HVAC
+  setback) done ends the spike → green `ResolvedBanner`; other 2 are extra savings.
+  `RecommendationList.tsx` on the detail screen; `doneIds` in the hook; Reset clears all.

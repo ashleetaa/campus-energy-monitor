@@ -6,7 +6,7 @@ import { formatDollars } from '../data/format'
 
 type Props = {
   alert: Alert
-  onViewChart?: () => void // leave out to hide the "View chart" button
+  onViewChart?: () => void // leave out to hide the "See fixes" button
 }
 
 export default function AlertBanner({ alert, onViewChart }: Props) {
@@ -26,7 +26,7 @@ export default function AlertBanner({ alert, onViewChart }: Props) {
             onClick={onViewChart}
             className="rounded-md bg-red-700 px-4 py-2 text-sm font-medium text-white hover:bg-red-800"
           >
-            View chart →
+            See fixes →
           </button>
         )}
       </div>

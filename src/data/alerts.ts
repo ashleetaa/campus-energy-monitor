@@ -14,6 +14,7 @@ export type Alert = {
   extraCostPerDay: number // dollars
   extraCostPerMonth: number
   extraCostPerYear: number
+  normalCostPerDay: number // what those same hours cost on a normal day
 }
 
 // Look at one building. Returns an Alert, or null if everything is normal.
@@ -42,6 +43,7 @@ export function checkBuilding(building: Building, now: Date, spikeOn: boolean): 
     // If it keeps happening every night:
     extraCostPerMonth: extraCostPerDay * 30,
     extraCostPerYear: extraCostPerDay * 365,
+    normalCostPerDay: costOf(lastWeekKwh),
   }
 }
 
