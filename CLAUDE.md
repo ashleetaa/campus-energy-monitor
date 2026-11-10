@@ -60,3 +60,6 @@ anything I decided. Keep it under 10 lines.)
 - Key files: `vite.config.ts`, `src/main.tsx`, `src/App.tsx` (placeholder), `src/index.css`.
 - Decided: spike is always Engineering Hall, overnight 10pm–6am; Reset button added;
   savings = sum of open recommendations; no 18% claim in the pitch.
+- Step 1 done: dashboard with 4 cards (kW now, kWh today, cost today), updates every 3s.
+  `data/buildings.ts` (peak kW + 24-hour pattern), `data/simulate.ts` (math),
+  `data/format.ts`, `hooks/useEnergyData.ts` (3s timer), `components/BuildingCard.tsx`.
