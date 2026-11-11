@@ -92,3 +92,9 @@ anything I decided. Keep it under 10 lines.)
 - Sizes realistic (~10–15 kWh/sq ft/yr): peaks 1,400/500/800/350 kW. Full-night HVAC ≈ $180/day, $66k/yr.
 - Decided: never random. A fix with fixesProblem ends the spike → green. Finals has none
   (suggested Ignore). Best demo time 7am–10pm (all 3 show full numbers). No 18% claim.
+
+## Open items
+- Repo: github.com/ashleetaa/campus-energy-monitor (push to `main`; keep the Claude co-author line).
+- Vercel: I'm deploying it myself; once I share the URL, run the demo check against it.
+- Not built (needs my OK): at night the alert shows "10pm to now" with only a partial-night
+  cost; could instead always project the full night.
