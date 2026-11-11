@@ -11,19 +11,18 @@ import RecommendationList from './components/RecommendationList'
 import ResolvedBanner from './components/ResolvedBanner'
 import SavingsSummary from './components/SavingsSummary'
 import type { Alert } from './data/alerts'
-import { MAIN_FIX_ID } from './data/recommendations'
 import { useEnergyData } from './hooks/useEnergyData'
 
 export default function App() {
   const energy = useEnergyData()
-  const { now, readings, alerts, recommendations, spikeAlert } = energy
+  const { now, readings, alerts, recommendations, spikeAlert, scenario } = energy
 
   // null = show the dashboard; otherwise the id of the building to show
   const [selectedId, setSelectedId] = useState<string | null>(null)
   const selected = readings.find((reading) => reading.building.id === selectedId)
   const alertFor = (buildingId: string) => alerts.find((alert) => alert.building.id === buildingId)
 
-  // The manager can choose to ignore the alert (e.g. a planned overnight event).
+  // The manager can choose to ignore the alert (e.g. finals week, a planned event).
   const isIgnored = (buildingId: string) =>
     energy.decision === 'ignored' && buildingId === spikeAlert?.building.id
 
@@ -41,11 +40,12 @@ export default function App() {
     )
 
   // Shown once the main fix is marked done.
-  const mainFix = recommendations.find((rec) => rec.id === MAIN_FIX_ID)
+  const mainFix = recommendations.find((rec) => rec.fixesProblem)
   const resolvedBanner = (showButton: boolean) =>
     energy.resolved && spikeAlert && mainFix ? (
       <ResolvedBanner
         buildingName={spikeAlert.building.name}
+        text={scenario.resolvedText}
         monthlySavings={mainFix.monthlySavings}
         yearlySavings={Math.round(spikeAlert.extraCostPerYear / 100) * 100}
         onViewDetails={showButton ? () => setSelectedId(spikeAlert.building.id) : undefined}
@@ -61,14 +61,21 @@ export default function App() {
             Live power use across campus · Updated {now.toLocaleTimeString('en-US')}
           </p>
         </div>
-        <DemoControls spikeOn={energy.spikeOn} onSimulateSpike={energy.simulateSpike} onReset={energy.reset} />
+        <DemoControls
+          scenarioId={scenario.id}
+          onSelectScenario={energy.selectScenario}
+          spikeOn={energy.spikeOn}
+          onSimulateSpike={energy.simulateSpike}
+          onReset={energy.reset}
+        />
       </header>
 
       {selected ? (
         <BuildingDetail
           building={selected.building}
           now={now}
-          spikeNight={energy.spikeNight}
+          spike={energy.spike}
+          spikeLabel={scenario.chartLabel}
           onBack={() => setSelectedId(null)}
         >
           {alertFor(selected.building.id) && banner(alertFor(selected.building.id)!, false)}
@@ -76,6 +83,8 @@ export default function App() {
             <>
               {resolvedBanner(false)}
               <RecommendationList
+                rootCause={scenario.rootCause(spikeAlert)}
+                suggestion={scenario.suggestion}
                 recommendations={recommendations}
                 doneIds={energy.doneIds}
                 onMarkDone={energy.markDone}
@@ -109,7 +118,6 @@ export default function App() {
           </div>
         </>
       )}
-
     </main>
   )
 }

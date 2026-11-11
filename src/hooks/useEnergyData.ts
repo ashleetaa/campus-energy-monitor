@@ -1,20 +1,20 @@
 // A React hook that "reads the meters" every 3 seconds.
 // It keeps the current time in state; changing it makes React redraw the
 // screen, and every number is recalculated from that time.
-// It also remembers the demo state: is the spike on, and which
-// recommendations have been marked done.
+// It also remembers the demo state: which scenario is picked, is the spike on,
+// what the manager decided, and which recommendations are done.
 
 import { useEffect, useState } from 'react'
 import { checkBuilding, findAlerts } from '../data/alerts'
 import { BUILDINGS, type Building } from '../data/buildings'
-import { MAIN_FIX_ID, recommendationsFor } from '../data/recommendations'
-import { costOf, currentKw, SPIKE_BUILDING_ID, spikeNightStart, todayKwh } from '../data/simulate'
+import { recommendationsFor } from '../data/recommendations'
+import { DEFAULT_SCENARIO_ID, findScenario, spikeFor } from '../data/scenarios'
+import { costOf, currentKw, todayKwh } from '../data/simulate'
 
 const UPDATE_EVERY_MS = 3000
 
 // What the manager chose to do about the alert.
 export type Decision = 'undecided' | 'fixing' | 'ignored'
-const SPIKE_BUILDING = BUILDINGS.find((building) => building.id === SPIKE_BUILDING_ID)!
 
 export type Reading = {
   building: Building
@@ -25,6 +25,7 @@ export type Reading = {
 
 export function useEnergyData() {
   const [now, setNow] = useState(() => new Date())
+  const [scenarioId, setScenarioId] = useState(DEFAULT_SCENARIO_ID)
   const [spikeOn, setSpikeOn] = useState(false)
   const [doneIds, setDoneIds] = useState<string[]>([]) // recommendations marked done
   const [decision, setDecision] = useState<Decision>('undecided')
@@ -34,28 +35,32 @@ export function useEnergyData() {
     return () => clearInterval(timer) // stop the timer if the page closes
   }, [])
 
-  // Once the main fix is done, the spike stops and the building is back to normal.
-  const resolved = spikeOn && doneIds.includes(MAIN_FIX_ID)
-  const spikeActive = spikeOn && !resolved
-  // The spiked night (its 10pm start time), or null when there's no active spike.
-  const spikeNight = spikeActive ? spikeNightStart(now) : null
+  const scenario = findScenario(scenarioId)
+  const building = BUILDINGS.find((b) => b.id === scenario.buildingId)!
+  const scenarioSpike = spikeFor(scenario, now)
 
-  const readings: Reading[] = BUILDINGS.map((building) => {
-    const kwh = todayKwh(building, now, spikeNight)
-    return { building, kw: currentKw(building, now, spikeNight), kwh, cost: costOf(kwh) }
+  // The alert and fixes as if the spike were on. They stay on screen after the
+  // main fix, so the other fixes can still be marked done.
+  const spikeAlert = spikeOn ? checkBuilding(building, now, scenarioSpike) : null
+  const recommendations = spikeAlert ? recommendationsFor(scenario, spikeAlert) : []
+
+  // Once a fix that removes the root cause is done, the building is back to normal.
+  const resolved = recommendations.some((rec) => rec.fixesProblem && doneIds.includes(rec.id))
+  const spike = spikeOn && !resolved ? scenarioSpike : null
+
+  const readings: Reading[] = BUILDINGS.map((b) => {
+    const kwh = todayKwh(b, now, spike)
+    return { building: b, kw: currentKw(b, now, spike), kwh, cost: costOf(kwh) }
   })
-
-  // The recommendations stay on screen after the fix, so the other ones can
-  // still be marked done. Their savings are worked out as if the spike were on.
-  const spikeAlert = spikeOn ? checkBuilding(SPIKE_BUILDING, now, spikeNightStart(now)) : null
-  const recommendations = spikeAlert ? recommendationsFor(spikeAlert) : []
 
   return {
     now,
     readings,
-    alerts: findAlerts(now, spikeNight),
+    alerts: findAlerts(now, spike),
+    scenario,
+    selectScenario: setScenarioId,
     spikeOn,
-    spikeNight,
+    spike,
     resolved,
     spikeAlert,
     recommendations,

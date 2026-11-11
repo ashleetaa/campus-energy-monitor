@@ -45,7 +45,7 @@ export default function AlertBanner({ alert, onViewChart }: Props) {
           <p className="text-2xl font-bold text-red-700 tabular-nums">{formatDollars(alert.extraCostPerYear)}</p>
         </div>
       </div>
-      <p className="mt-2 text-xs text-slate-500">Month and year assume it keeps happening every night.</p>
+      <p className="mt-2 text-xs text-slate-500">Month and year assume it keeps happening every day.</p>
     </div>
   )
 }

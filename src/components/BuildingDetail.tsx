@@ -16,12 +16,13 @@ import {
 } from 'recharts'
 import type { Building } from '../data/buildings'
 import { formatDollars, formatKw } from '../data/format'
-import { costOf, last24Hours, totalKwh } from '../data/simulate'
+import { costOf, last24Hours, totalKwh, type ActiveSpike } from '../data/simulate'
 
 type Props = {
   building: Building
   now: Date
-  spikeNight: number | null // start of the spiked night, or null
+  spike: ActiveSpike | null // the scenario's extra use, or null
+  spikeLabel: string // label for the shaded part of the chart
   onBack: () => void
   children?: ReactNode
 }
@@ -29,8 +30,8 @@ type Props = {
 const THIS_WEEK_COLOR = '#2563eb' // blue
 const LAST_WEEK_COLOR = '#94a3b8' // gray: the "normal" baseline
 
-export default function BuildingDetail({ building, now, spikeNight, onBack, children }: Props) {
-  const points = last24Hours(building, now, spikeNight)
+export default function BuildingDetail({ building, now, spike, spikeLabel, onBack, children }: Props) {
+  const points = last24Hours(building, now, spike)
   const costThisWeek = costOf(totalKwh(points, 'thisWeek'))
   const costLastWeek = costOf(totalKwh(points, 'lastWeek'))
 
@@ -74,7 +75,7 @@ export default function BuildingDetail({ building, now, spikeNight, onBack, chil
                   x2={points[shadeEnd].label}
                   fill="#fee2e2"
                   fillOpacity={0.8}
-                  label={{ value: 'HVAC ran overnight', position: 'insideTop', fill: '#b91c1c', fontSize: 12 }}
+                  label={{ value: spikeLabel, position: 'insideTop', fill: '#b91c1c', fontSize: 12 }}
                 />
               )}
               <XAxis dataKey="label" tick={{ fontSize: 12, fill: '#64748b' }} interval={2} />

@@ -43,6 +43,13 @@ All data is simulated in the browser.
    detail screen they see the root cause and choose "Make changes" (shows the fixes)
    or "Ignore, this was expected" (alert turns gray, still shows what it costs, and
    can be reviewed again). Ignored fixes don't count toward savings available.
+8. Three fixed scenarios (never random), picked from a dropdown in Demo controls.
+   Each has its own building, hours, pattern, root cause, suggested choice and fixes:
+   - HVAC left on overnight (default): Engineering Hall, +40%, 10pm–6am → Make changes.
+   - Lights left on after closing: Library, +45%, midnight–7am → Make changes.
+   - Finals week: Dorm A, +40%, 6pm–midnight → suggested Ignore (expected); only
+     optional ways to reduce it, nothing that "fixes" it.
+   Best demo time for all three: 7am–6pm.
 
 Demo flow: normal dashboard → Simulate spike → red banner + red card → Look into it
 → root cause → Make changes → Mark as done → savings achieved.
@@ -67,12 +74,12 @@ recommends a fix. The pitch uses the dollar amount the app calculates.
 ## Progress
 (Claude: after each step, update this list: what's done, what files matter,
 anything I decided. Keep it under 10 lines.)
-- Steps 0–7 done + reliability check. Vite 8, React 19, TS, Tailwind v4, Recharts 3.
-- `src/data/`: buildings (peak kW, 24h pattern), simulate (kW/kWh/cost, ±3% fixed history
-  wobble, spike = the most recent 10pm–6am night), alerts (hours ≥30% over last week,
-  $/day ×30 ×365), recommendations (root cause + 3 fixes), format. Hook: 3s timer + demo state.
+- Steps 0–8 done + reliability checks. Vite 8, React 19, TS, Tailwind v4, Recharts 3.
+- `src/data/`: buildings, simulate (kW/kWh/cost, ±3% fixed history wobble, `ActiveSpike`),
+  scenarios (3 fixed scenarios: building, hours, extra %, root cause, suggestion, fixes),
+  alerts (hours ≥30% over last week, $/day ×30 ×365), recommendations, format.
+- Hook `useEnergyData`: 3s timer + demo state (scenario, spikeOn, decision, doneIds).
 - `src/components/`: BuildingCard, BuildingDetail (chart), AlertBanner, IgnoredBanner,
-  ResolvedBanner, RecommendationList, SavingsSummary, DemoControls (top-right of header).
-- Decided: spike always Engineering Hall, +40%. Fixes hidden until "Make changes" (← Back
-  returns to the choice). Main fix done → green banner. Ignore → gray, still shows cost.
-- Best demo time 6am–10pm: alert is then always "10pm to 6am, +39%, $59/day". No 18% claim.
+  ResolvedBanner, RecommendationList, SavingsSummary, DemoControls (dropdown, top-right).
+- Decided: never random. A fix with fixesProblem ends the spike → green. Finals has none
+  (suggested Ignore). Best demo time 7am–6pm (all 3 show full numbers). No 18% claim.

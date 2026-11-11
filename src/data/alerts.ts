@@ -2,7 +2,7 @@
 // hours last week and works out what the extra energy costs.
 
 import { BUILDINGS, type Building } from './buildings'
-import { costOf, last24Hours, type HourPoint } from './simulate'
+import { costOf, last24Hours, type ActiveSpike, type HourPoint } from './simulate'
 
 const ALERT_THRESHOLD = 1.3 // alert when usage is 30%+ above last week
 
@@ -18,8 +18,8 @@ export type Alert = {
 }
 
 // Look at one building. Returns an Alert, or null if everything is normal.
-export function checkBuilding(building: Building, now: Date, spikeNight: number | null): Alert | null {
-  const points = last24Hours(building, now, spikeNight)
+export function checkBuilding(building: Building, now: Date, spike: ActiveSpike | null): Alert | null {
+  const points = last24Hours(building, now, spike)
   const isUnusual = (point: HourPoint) => point.thisWeek >= point.lastWeek * ALERT_THRESHOLD
 
   const unusual = points.filter(isUnusual)
@@ -42,7 +42,7 @@ export function checkBuilding(building: Building, now: Date, spikeNight: number 
     toLabel,
     percentAbove: Math.round((thisWeekKwh / lastWeekKwh - 1) * 100),
     extraCostPerDay,
-    // If it keeps happening every night:
+    // If it keeps happening every day:
     extraCostPerMonth: extraCostPerDay * 30,
     extraCostPerYear: extraCostPerDay * 365,
     normalCostPerDay: costOf(lastWeekKwh),
@@ -50,8 +50,8 @@ export function checkBuilding(building: Building, now: Date, spikeNight: number 
 }
 
 // Check every building and return the ones with an alert.
-export function findAlerts(now: Date, spikeNight: number | null): Alert[] {
-  return BUILDINGS.map((building) => checkBuilding(building, now, spikeNight)).filter(
+export function findAlerts(now: Date, spike: ActiveSpike | null): Alert[] {
+  return BUILDINGS.map((building) => checkBuilding(building, now, spike)).filter(
     (alert): alert is Alert => alert !== null,
   )
 }

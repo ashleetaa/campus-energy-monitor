@@ -5,12 +5,13 @@ import { formatDollars } from '../data/format'
 
 type Props = {
   buildingName: string
+  text: string // what was fixed, e.g. "Root cause fixed: ..."
   monthlySavings: number
   yearlySavings: number
   onViewDetails?: () => void // leave out to hide the button
 }
 
-export default function ResolvedBanner({ buildingName, monthlySavings, yearlySavings, onViewDetails }: Props) {
+export default function ResolvedBanner({ buildingName, text, monthlySavings, yearlySavings, onViewDetails }: Props) {
   return (
     <div className="mb-6 rounded-xl border border-green-300 bg-green-50 p-5">
       <div className="flex flex-wrap items-start justify-between gap-4">
@@ -18,7 +19,7 @@ export default function ResolvedBanner({ buildingName, monthlySavings, yearlySav
           <p className="text-sm font-semibold text-green-800 uppercase">✓ Resolved</p>
           <h2 className="mt-1 text-xl font-bold text-slate-900">{buildingName} is back to normal</h2>
           <p className="mt-1 text-slate-600">
-            Root cause fixed: the HVAC now switches to its overnight setting. Saving about{' '}
+            {text} Saving about{' '}
             <span className="font-semibold text-green-800">{formatDollars(monthlySavings)}/month</span> (
             {formatDollars(yearlySavings)}/year).
           </p>
