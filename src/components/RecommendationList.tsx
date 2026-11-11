@@ -88,12 +88,15 @@ export default function RecommendationList({ recommendations, doneIds, onMarkDon
 
           {/* Changed your mind? Until the fix is done, you can still ignore it. */}
           {showFixes && !doneIds.includes(mainFix.id) && (
-            <button
-              onClick={() => onDecide('ignored')}
-              className="mt-4 text-sm font-medium text-slate-600 underline hover:text-slate-900"
-            >
-              Changed your mind? Ignore instead, this was expected
-            </button>
+            <div className="mt-4 flex flex-wrap items-center gap-3 border-t border-blue-200 pt-4">
+              <p className="text-sm text-slate-600">Changed your mind?</p>
+              <button
+                onClick={() => onDecide('ignored')}
+                className="rounded-md border border-slate-400 bg-white px-3 py-1.5 text-sm font-medium text-slate-700 hover:bg-slate-100"
+              >
+                Ignore instead, this was expected
+              </button>
+            </div>
           )}
         </section>
       )}
