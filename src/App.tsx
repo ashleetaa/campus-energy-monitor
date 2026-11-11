@@ -1,5 +1,5 @@
-// The main screen. Shows either the dashboard (all 4 buildings) or one
-// building's detail, depending on which building is selected.
+// The main screen. Two tabs: "Live monitor" (the dashboard, or one building's
+// detail when a building is selected) and "Savings estimator".
 
 import { useState } from 'react'
 import AlertBanner from './components/AlertBanner'
@@ -9,6 +9,7 @@ import DemoControls from './components/DemoControls'
 import IgnoredBanner from './components/IgnoredBanner'
 import RecommendationList from './components/RecommendationList'
 import ResolvedBanner from './components/ResolvedBanner'
+import SavingsEstimator from './components/SavingsEstimator'
 import SavingsSummary from './components/SavingsSummary'
 import type { Alert } from './data/alerts'
 import { useEnergyData } from './hooks/useEnergyData'
@@ -17,6 +18,7 @@ export default function App() {
   const energy = useEnergyData()
   const { now, readings, alerts, recommendations, spikeAlert, scenario } = energy
 
+  const [tab, setTab] = useState<'monitor' | 'estimator'>('monitor')
   // null = show the dashboard; otherwise the id of the building to show
   const [selectedId, setSelectedId] = useState<string | null>(null)
   const selected = readings.find((reading) => reading.building.id === selectedId)
@@ -61,16 +63,34 @@ export default function App() {
             Live power use across campus · Updated {now.toLocaleTimeString('en-US')}
           </p>
         </div>
-        <DemoControls
-          scenarioId={scenario.id}
-          onSelectScenario={energy.selectScenario}
-          spikeOn={energy.spikeOn}
-          onSimulateSpike={energy.simulateSpike}
-          onReset={energy.reset}
-        />
+        {tab === 'monitor' && (
+          <DemoControls
+            scenarioId={scenario.id}
+            onSelectScenario={energy.selectScenario}
+            spikeOn={energy.spikeOn}
+            onSimulateSpike={energy.simulateSpike}
+            onReset={energy.reset}
+          />
+        )}
       </header>
 
-      {selected ? (
+      <nav className="mb-6 flex gap-2 border-b border-slate-200">
+        {(['monitor', 'estimator'] as const).map((name) => (
+          <button
+            key={name}
+            onClick={() => setTab(name)}
+            className={`-mb-px border-b-2 px-4 py-2 text-sm font-semibold ${
+              tab === name ? 'border-blue-700 text-blue-800' : 'border-transparent text-slate-500 hover:text-slate-800'
+            }`}
+          >
+            {name === 'monitor' ? 'Live monitor' : 'Savings estimator'}
+          </button>
+        ))}
+      </nav>
+
+      {tab === 'estimator' ? (
+        <SavingsEstimator now={now} />
+      ) : selected ? (
         <BuildingDetail
           building={selected.building}
           now={now}

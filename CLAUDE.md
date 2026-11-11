@@ -52,6 +52,12 @@ All data is simulated in the browser.
    - Finals week: Sterling C. Evans Library, +40%, 10pm–4am → suggested Ignore
      (expected); only optional ways to reduce it, nothing that "fixes" it.
    Best demo time for all three: 7am–10pm.
+9. "Savings estimator" tab (next to "Live monitor"): sliders for number of buildings,
+   average monthly energy cost per building, estimated reduction % and cost to set
+   up. Starts from this campus's own numbers (4 buildings, their simulated average
+   monthly cost). Shows savings per month and per year and "pays for itself in X
+   months". A note grounds the % in what the demo's fixes saved. Labeled as an
+   illustrative estimate. Formula: buildings × monthly cost × reduction %.
 
 Demo flow: normal dashboard → Simulate spike → red banner + red card → Look into it
 → root cause → Make changes → Mark as done → savings achieved.
@@ -76,12 +82,13 @@ recommends a fix. The pitch uses the dollar amount the app calculates.
 ## Progress
 (Claude: after each step, update this list: what's done, what files matter,
 anything I decided. Keep it under 10 lines.)
-- Steps 0–8 done + reliability checks. Vite 8, React 19, TS, Tailwind v4, Recharts 3.
+- Steps 0–9 done + reliability checks. Vite 8, React 19, TS, Tailwind v4, Recharts 3.
 - `src/data/`: buildings, simulate (kW/kWh/cost, ±3% fixed history wobble, `ActiveSpike`),
   scenarios (3 fixed scenarios: building, hours, extra %, root cause, suggestion, fixes),
-  alerts (hours ≥30% over last week, $/day ×30 ×365), recommendations, format.
+  alerts (hours ≥30% over last week, $/day ×30 ×365), recommendations, format,
+  estimator (Step 9 math; defaults 4 bldgs, $16,000/mo, 8%, $50k setup → ~10-month payback).
 - Hook `useEnergyData`: 3s timer + demo state (scenario, spikeOn, decision, doneIds).
 - `src/components/`: BuildingCard, BuildingDetail (chart), AlertBanner, IgnoredBanner,
-  ResolvedBanner, RecommendationList, SavingsSummary, DemoControls (dropdown, top-right).
+  ResolvedBanner, RecommendationList, SavingsSummary, DemoControls, SavingsEstimator (tab).
 - Decided: never random. A fix with fixesProblem ends the spike → green. Finals has none
   (suggested Ignore). Best demo time 7am–10pm (all 3 show full numbers). No 18% claim.
