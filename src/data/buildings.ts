@@ -4,7 +4,9 @@ export type Building = {
   id: string
   name: string
   description: string
-  peakKw: number // highest normal power draw, in kilowatts
+  // Highest normal power draw, in kilowatts. Sized so yearly use matches typical
+  // buildings of this type and size (about 10–15 kWh per square foot per year).
+  peakKw: number
   // 24 numbers, one per hour (index 0 = midnight, 13 = 1pm).
   // Each is a fraction of peakKw: 1.0 = full peak, 0.3 = 30% of peak.
   dailyPattern: number[]
@@ -15,7 +17,7 @@ export const BUILDINGS: Building[] = [
     id: 'zachary',
     name: 'Zachary Engineering Education Complex',
     description: 'Busiest 9am–5pm',
-    peakKw: 450,
+    peakKw: 1400, // ~525,000 sq ft with labs: ~7.9 million kWh/year
     dailyPattern: [
       0.35, 0.33, 0.32, 0.32, 0.33, 0.38, 0.5, 0.7, 0.88, 0.97, 1.0, 1.0,
       0.98, 1.0, 0.99, 0.95, 0.88, 0.75, 0.6, 0.52, 0.47, 0.42, 0.38, 0.36,
@@ -25,7 +27,7 @@ export const BUILDINGS: Building[] = [
     id: 'evans-library',
     name: 'Sterling C. Evans Library',
     description: 'Busiest in the evening',
-    peakKw: 220,
+    peakKw: 500, // ~3.1 million kWh/year
     dailyPattern: [
       0.35, 0.32, 0.3, 0.3, 0.3, 0.32, 0.4, 0.55, 0.75, 0.88, 0.92, 0.95,
       0.97, 0.98, 0.98, 0.97, 0.95, 0.95, 0.97, 1.0, 0.98, 0.9, 0.7, 0.45,
@@ -35,7 +37,7 @@ export const BUILDINGS: Building[] = [
     id: 'rec-center',
     name: 'Student Recreation Center',
     description: 'Busiest early morning and evening',
-    peakKw: 300,
+    peakKw: 800, // large gym and pools: ~4.4 million kWh/year
     dailyPattern: [
       0.3, 0.28, 0.28, 0.28, 0.3, 0.55, 0.85, 0.9, 0.75, 0.65, 0.62, 0.65,
       0.7, 0.65, 0.62, 0.7, 0.88, 0.98, 1.0, 0.95, 0.85, 0.65, 0.45, 0.35,
@@ -45,7 +47,7 @@ export const BUILDINGS: Building[] = [
     id: 'hullabaloo',
     name: 'Hullabaloo Hall',
     description: 'Busiest in the evening',
-    peakKw: 180,
+    peakKw: 350, // residence hall: ~2.0 million kWh/year
     dailyPattern: [
       0.55, 0.5, 0.48, 0.47, 0.47, 0.5, 0.62, 0.75, 0.7, 0.55, 0.48, 0.47,
       0.48, 0.48, 0.5, 0.55, 0.65, 0.8, 0.92, 0.98, 1.0, 0.97, 0.85, 0.7,

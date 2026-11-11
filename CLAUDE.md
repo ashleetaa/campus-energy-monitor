@@ -86,9 +86,9 @@ anything I decided. Keep it under 10 lines.)
 - `src/data/`: buildings, simulate (kW/kWh/cost, ±3% fixed history wobble, `ActiveSpike`),
   scenarios (3 fixed scenarios: building, hours, extra %, root cause, suggestion, fixes),
   alerts (hours ≥30% over last week, $/day ×30 ×365), recommendations, format,
-  estimator (Step 9 math; defaults 4 bldgs, $16,000/mo, 8%, $50k setup → ~10-month payback).
+  estimator (Step 9 math; defaults 4 bldgs, $43,000/mo, 8%, $150k setup → ~11-month payback).
 - Hook `useEnergyData`: 3s timer + demo state (scenario, spikeOn, decision, doneIds).
-- `src/components/`: BuildingCard, BuildingDetail (chart), AlertBanner, IgnoredBanner,
-  ResolvedBanner, RecommendationList, SavingsSummary, DemoControls, SavingsEstimator (tab).
+- `src/components/`: BuildingCard, BuildingDetail (chart), Alert/Ignored/ResolvedBanner, RecommendationList, SavingsSummary, DemoControls, SavingsEstimator.
+- Sizes realistic (~10–15 kWh/sq ft/yr): peaks 1,400/500/800/350 kW. Full-night HVAC ≈ $180/day, $66k/yr.
 - Decided: never random. A fix with fixesProblem ends the spike → green. Finals has none
   (suggested Ignore). Best demo time 7am–10pm (all 3 show full numbers). No 18% claim.

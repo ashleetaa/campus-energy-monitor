@@ -19,9 +19,9 @@ export function campusDefaults() {
   const total = BUILDINGS.reduce((sum, building) => sum + normalMonthlyCost(building), 0)
   return {
     buildings: BUILDINGS.length,
-    monthlyCostPerBuilding: Math.round(total / BUILDINGS.length / 500) * 500, // nearest $500
+    monthlyCostPerBuilding: Math.round(total / BUILDINGS.length / 1000) * 1000, // nearest $1,000
     reductionPercent: 8,
-    setupCost: 50000,
+    setupCost: 150000, // sensors, meters and software for 4 large buildings
   }
 }
 
@@ -39,11 +39,15 @@ export function estimate(inputs: EstimatorInputs) {
 
 // For each demo scenario that has a real fix: what % of that building's monthly
 // cost the fix saves. Used to back up the reduction % with the demo's own numbers.
+// Measured at 2pm, after every scenario's overnight window has ended, so the
+// full night counts and the % is the same whatever time it is now.
 export function demoFixPercents(now: Date): { building: string; percent: number }[] {
+  const afternoon = new Date(now)
+  afternoon.setHours(14, 0, 0, 0)
   const results: { building: string; percent: number }[] = []
   for (const scenario of SCENARIOS) {
     const building = BUILDINGS.find((b) => b.id === scenario.buildingId)!
-    const alert = checkBuilding(building, now, spikeFor(scenario, now))
+    const alert = checkBuilding(building, afternoon, spikeFor(scenario, afternoon))
     const mainFix = alert ? recommendationsFor(scenario, alert).find((rec) => rec.fixesProblem) : undefined
     if (mainFix) {
       results.push({

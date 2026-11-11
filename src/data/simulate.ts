@@ -67,7 +67,6 @@ export function costOf(kwh: number): number {
 }
 
 const ONE_HOUR_MS = 60 * 60 * 1000
-const ONE_WEEK_MS = 7 * 24 * ONE_HOUR_MS
 
 // A small ±3% variation for past hours that is always the same for the same
 // building and hour. It's "random-looking" but fixed (from a sine wave), so
@@ -102,7 +101,10 @@ export function last24Hours(building: Building, now: Date, spike: ActiveSpike | 
   const points: HourPoint[] = []
   for (let hoursAgo = 23; hoursAgo >= 0; hoursAgo--) {
     const time = new Date(thisHour.getTime() - hoursAgo * ONE_HOUR_MS)
-    const weekBefore = new Date(time.getTime() - ONE_WEEK_MS)
+    // Same clock hour 7 days earlier (by calendar date, so daylight saving
+    // changes don't shift it by an hour).
+    const weekBefore = new Date(time)
+    weekBefore.setDate(weekBefore.getDate() - 7)
     points.push({
       label: time.toLocaleTimeString('en-US', { hour: 'numeric' }).replace(' ', '').toLowerCase(),
       thisWeek: Math.round(pastKwAt(building, time, spike)),

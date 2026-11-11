@@ -8,7 +8,7 @@ import { formatDollars } from '../data/format'
 type SliderProps = {
   label: string
   value: number
-  shown: string // the value as text, e.g. "$16,000"
+  shown: string // the value as text, e.g. "$43,000"
   min: number
   max: number
   step: number
@@ -78,8 +78,8 @@ export default function SavingsEstimator({ now }: { now: Date }) {
             value={inputs.monthlyCostPerBuilding}
             shown={formatDollars(inputs.monthlyCostPerBuilding)}
             min={1000}
-            max={100000}
-            step={500}
+            max={200000}
+            step={1000}
             onChange={set('monthlyCostPerBuilding')}
           />
           <div>
@@ -104,8 +104,8 @@ export default function SavingsEstimator({ now }: { now: Date }) {
             value={inputs.setupCost}
             shown={formatDollars(inputs.setupCost)}
             min={0}
-            max={500000}
-            step={5000}
+            max={1000000}
+            step={10000}
             onChange={set('setupCost')}
           />
         </div>
