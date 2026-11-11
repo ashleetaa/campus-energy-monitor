@@ -39,17 +39,17 @@ const OTHER_BUILDINGS = [
   { left: 96.5, top: 64, width: 3.5, height: 22 },
 ]
 
-// One tree: a round green top on a short brown trunk.
+// One tree: a round forest-green top on a short brown trunk.
 function Tree({ left, top, size }: { left: number; top: number; size: number }) {
   return (
     <div
       className="absolute -translate-x-1/2 -translate-y-1/2"
       style={{ left: `${left}%`, top: `${top}%`, width: size, height: size * 1.3 }}
     >
-      <div className="absolute bottom-0 left-1/2 h-1/3 w-[3px] -translate-x-1/2 rounded-full bg-amber-800/60" />
-      <div className="absolute inset-x-0 top-0 aspect-square rounded-full bg-green-400 shadow-sm" />
+      <div className="absolute bottom-0 left-1/2 h-1/3 w-[3px] -translate-x-1/2 rounded-full bg-[#6b4f3a]" />
+      <div className="absolute inset-x-0 top-0 aspect-square rounded-full bg-[#3f7a4f] shadow-sm" />
       {/* a lighter spot so the tree looks rounded */}
-      <div className="absolute top-[10%] left-[18%] size-2/5 rounded-full bg-green-300" />
+      <div className="absolute top-[10%] left-[18%] size-2/5 rounded-full bg-[#5c9468]" />
     </div>
   )
 }
@@ -83,7 +83,7 @@ export default function CampusMap({ children }: { children: ReactNode }) {
           ))}
 
           {/* The quad: a green square turned 45° where the paths meet. */}
-          <div className="absolute top-1/2 left-1/2 size-32 -translate-x-1/2 -translate-y-1/2 rotate-45 rounded-2xl border-[6px] border-white/90 bg-green-200" />
+          <div className="absolute top-1/2 left-1/2 size-32 -translate-x-1/2 -translate-y-1/2 rotate-45 rounded-2xl border-[6px] border-white/90 bg-[#d6ecd2]" />
           <p className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 text-center leading-tight font-semibold text-green-800">
             Main
             <br />
@@ -107,7 +107,7 @@ export default function CampusMap({ children }: { children: ReactNode }) {
           Higher than expected
         </span>
         <span className="flex items-center gap-2">
-          <span className="size-4 rounded border-2 border-green-300 bg-green-50" />
+          <span className="size-4 rounded border-2 border-[#c4e3c0] bg-[#f2f9f1]" />
           Normal usage
         </span>
       </div>

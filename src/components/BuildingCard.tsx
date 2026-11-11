@@ -49,7 +49,7 @@ export default function BuildingCard({ reading, needsAttention, ignored, percent
     ? 'border-red-400 bg-red-50 hover:border-red-500'
     : ignored
       ? 'border-slate-300 bg-slate-50 hover:border-slate-400'
-      : 'border-green-300 bg-green-50 hover:border-green-500'
+      : 'border-[#c4e3c0] bg-[#f2f9f1] hover:border-[#8fca8a]' // soft, muted green
   const iconColor = needsAttention ? 'text-red-600' : ignored ? 'text-slate-500' : 'text-green-700'
 
   return (
