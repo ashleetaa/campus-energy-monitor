@@ -14,8 +14,8 @@ export type Building = {
 
 export const BUILDINGS: Building[] = [
   {
-    id: 'zachary',
-    name: 'Zachary Engineering Education Complex',
+    id: 'zachry',
+    name: 'Zachry Engineering Education Complex',
     description: 'Busiest 9am–5pm',
     peakKw: 1400, // ~525,000 sq ft with labs: ~7.9 million kWh/year
     dailyPattern: [

@@ -4,7 +4,7 @@
 import { BedDouble, BookOpen, Dumbbell, FlaskConical, type LucideIcon } from 'lucide-react'
 
 const ICONS: Record<string, LucideIcon> = {
-  zachary: FlaskConical,
+  zachry: FlaskConical,
   'evans-library': BookOpen,
   'rec-center': Dumbbell,
   hullabaloo: BedDouble,

@@ -7,13 +7,14 @@ import AlertPanel, { type PanelStatus } from './components/AlertPanel'
 import BuildingCard from './components/BuildingCard'
 import BuildingDetail from './components/BuildingDetail'
 import CampusMap from './components/CampusMap'
+import { MapSpot } from './components/BuildingArt'
 import DemoControls from './components/DemoControls'
 import IgnoredBanner from './components/IgnoredBanner'
 import RecommendationList from './components/RecommendationList'
 import ResolvedBanner from './components/ResolvedBanner'
 import SavingsEstimator from './components/SavingsEstimator'
 import SummaryTiles from './components/SummaryTiles'
-import { Landmark } from 'lucide-react'
+import { Leaf } from 'lucide-react'
 import type { Alert } from './data/alerts'
 import { useEnergyData } from './hooks/useEnergyData'
 
@@ -71,13 +72,13 @@ export default function App() {
     <main className="min-h-screen bg-gradient-to-b from-slate-50 to-blue-50 p-4 md:p-10">
       <header className="mb-8 flex flex-wrap items-center justify-between gap-4">
         <div className="flex items-center gap-4">
-          <div className="flex size-14 items-center justify-center rounded-2xl bg-blue-100 text-blue-800 shadow-sm">
-            <Landmark className="size-7" />
+          <div className="flex size-14 items-center justify-center rounded-2xl bg-green-100 text-green-700 shadow-sm">
+            <Leaf className="size-7" />
           </div>
           <div>
-            <h1 className="text-3xl font-bold text-slate-900">Campus Energy Monitor</h1>
+            <h1 className="font-brand text-4xl font-semibold text-slate-900">Verdant</h1>
             <p className="mt-1 text-slate-600">
-              Live power use across campus · Updated {now.toLocaleTimeString('en-US')}
+              Campus energy monitor · Updated {now.toLocaleTimeString('en-US')}
             </p>
           </div>
         </div>
@@ -155,15 +156,17 @@ export default function App() {
 
             <div className="xl:order-1 xl:col-span-2">
               <CampusMap>
-                {readings.map((reading) => (
-                  <BuildingCard
-                    key={reading.building.id}
-                    reading={reading}
-                    needsAttention={alertFor(reading.building.id) !== undefined && !isIgnored(reading.building.id)}
-                    ignored={alertFor(reading.building.id) !== undefined && isIgnored(reading.building.id)}
-                    percentAbove={alertFor(reading.building.id)?.percentAbove ?? null}
-                    onClick={() => setSelectedId(reading.building.id)}
-                  />
+                {/* In the 2-column grid, even positions are the left column. */}
+                {readings.map((reading, i) => (
+                  <MapSpot key={reading.building.id} buildingId={reading.building.id} mirror={i % 2 === 0}>
+                    <BuildingCard
+                      reading={reading}
+                      needsAttention={alertFor(reading.building.id) !== undefined && !isIgnored(reading.building.id)}
+                      ignored={alertFor(reading.building.id) !== undefined && isIgnored(reading.building.id)}
+                      percentAbove={alertFor(reading.building.id)?.percentAbove ?? null}
+                      onClick={() => setSelectedId(reading.building.id)}
+                    />
+                  </MapSpot>
                 ))}
               </CampusMap>
             </div>

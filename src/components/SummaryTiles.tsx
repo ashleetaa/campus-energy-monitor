@@ -3,7 +3,7 @@
 // available = fixes not done yet (none if the alert was ignored),
 // achieved = fixes marked done (these still count after ignoring).
 
-import { AlertTriangle, CheckCircle2, Leaf, Zap, type LucideIcon } from 'lucide-react'
+import { AlertTriangle, CheckCircle2, CircleDollarSign, Zap, type LucideIcon } from 'lucide-react'
 import type { ReactNode } from 'react'
 import { formatDollars, formatKw } from '../data/format'
 import type { Recommendation } from '../data/recommendations'
@@ -67,7 +67,7 @@ export default function SummaryTiles({ campusKw, activeAlerts, recommendations, 
       </Tile>
 
       <Tile
-        icon={Leaf}
+        icon={CircleDollarSign}
         color="bg-amber-100 text-amber-700"
         tint="bg-white"
         label="Savings available"

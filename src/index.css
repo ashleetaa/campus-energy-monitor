@@ -1,1 +1,7 @@
 @import "tailwindcss";
+
+/* "font-brand" class: the font for the Verdant name. Falls back to Georgia
+   if Google Fonts can't load (e.g. no internet). */
+@theme {
+  --font-brand: "Fraunces", Georgia, serif;
+}

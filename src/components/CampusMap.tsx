@@ -84,11 +84,6 @@ export default function CampusMap({ children }: { children: ReactNode }) {
 
           {/* The quad: a green square turned 45° where the paths meet. */}
           <div className="absolute top-1/2 left-1/2 size-32 -translate-x-1/2 -translate-y-1/2 rotate-45 rounded-2xl border-[6px] border-white/90 bg-[#d6ecd2]" />
-          <p className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 text-center leading-tight font-semibold text-green-800">
-            Main
-            <br />
-            Quad
-          </p>
 
           {TREES.map((tree, i) => (
             <Tree key={i} {...tree} />
@@ -96,7 +91,7 @@ export default function CampusMap({ children }: { children: ReactNode }) {
         </div>
 
         {/* The building cards, spaced apart so the lawn, paths and quad show around them. */}
-        <div className="relative grid gap-4 sm:grid-cols-2 sm:gap-x-32 sm:gap-y-24 sm:px-14 sm:py-12">
+        <div className="relative grid gap-4 sm:grid-cols-2 sm:gap-x-32 sm:gap-y-8 sm:px-14 sm:py-6">
           {children}
         </div>
       </div>

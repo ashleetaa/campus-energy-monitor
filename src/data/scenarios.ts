@@ -34,7 +34,7 @@ export const SCENARIOS: Scenario[] = [
   {
     id: 'hvac',
     name: 'HVAC left on overnight',
-    buildingId: 'zachary',
+    buildingId: 'zachry',
     startHour: 22,
     lengthHours: 8,
     extra: 1.4,

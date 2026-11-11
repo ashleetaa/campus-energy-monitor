@@ -1,4 +1,4 @@
-# Campus Energy Monitor
+# Verdant (Campus Energy Monitor)
 
 A demo app for an IBM Technical Sales interview on Fri Nov 13. It has to work
 reliably in a 5–10 minute live demo, so reliability matters more than features.
@@ -19,13 +19,13 @@ All data is simulated in the browser.
 
 ## Plan
 0. Set up the Vite + React + TypeScript + Tailwind project in this folder.
-1. Dashboard: 4 buildings (Zachary Engineering Education Complex, Sterling C. Evans
+1. Dashboard: 4 buildings (Zachry Engineering Education Complex, Sterling C. Evans
    Library, Student Recreation Center, Hullabaloo Hall). Each card
    shows current kW, today's kWh and today's cost. Readings update every 3 seconds,
    higher by day and lower at night.
 2. Building detail: click a building to see a 24-hour line chart vs. the same hours
    last week.
-3. "Simulate spike": the Zachary Engineering Education Complex's HVAC was left running last night,
+3. "Simulate spike": the Zachry Engineering Education Complex's HVAC was left running last night,
    10pm–6am, about 40% above normal for those hours. On the 24-hour chart that
    window is shaded light red and labeled "HVAC ran overnight". "Simulate spike"
    and "Reset" sit in a small "Demo controls" box at the top-right of the header, so the
@@ -46,7 +46,7 @@ All data is simulated in the browser.
    can be reviewed again). Ignored fixes don't count toward savings available.
 8. Three fixed scenarios (never random), picked from a dropdown in Demo controls.
    Each has its own building, hours, pattern, root cause, suggested choice and fixes:
-   - HVAC left on overnight: Zachary Engineering Education Complex, +40%,
+   - HVAC left on overnight: Zachry Engineering Education Complex, +40%,
      10pm–6am → Make changes.
    - Lights left on all night: Hullabaloo Hall, +45%, midnight–7am → Make changes.
    - Finals week: Sterling C. Evans Library, +40%, 10pm–4am → suggested Ignore
@@ -91,7 +91,7 @@ anything I decided. Keep it under 10 lines.)
   estimator (Step 9 math; defaults 4 bldgs, $43,000/mo, 8%, $150k setup → ~11-month payback).
 - Hook `useEnergyData`: 3s timer + demo state (scenario, spikeOn, decision, doneIds).
 - `src/components/`: BuildingCard, BuildingDetail (chart), AlertPanel, Alert/Ignored/ResolvedBanner, RecommendationList, SummaryTiles, DemoControls, SavingsEstimator.
-- Redesign (Nov 11, from a mockup): lucide-react icons OK'd. Choices: styled cards (no map), alert as side panel. R1 done: header + 4 KPI tiles (SummaryTiles replaced SavingsSummary; no sparkline). R2 done: card icons + status pills. R3 done: AlertPanel (status chip + red/gray/green banner or All clear) right of cards on xl, above them on narrow screens; banners now stack vertically. R4 done: detail header card + cost tiles, icons in fixes and estimator; building icons shared in buildingIcons.ts. Redesign complete. Then added CampusMap (decorative lawn, paths, quad, trees, other buildings; hidden on phones) and compact cards (icon, name, kW, pill, small "Today: kWh · $" line).
+- Redesign (Nov 11, from a mockup): lucide-react icons OK'd. Choices: styled cards (no map), alert as side panel. R1 done: header + 4 KPI tiles (SummaryTiles replaced SavingsSummary; no sparkline). R2 done: card icons + status pills. R3 done: AlertPanel (status chip + red/gray/green banner or All clear) right of cards on xl, above them on narrow screens; banners now stack vertically. R4 done: detail header card + cost tiles, icons in fixes and estimator; building icons shared in buildingIcons.ts. Redesign complete. Then added CampusMap (decorative lawn, paths, quad, trees, other buildings; hidden on phones) and compact cards (icon, name, kW, pill, small "Today: kWh · $" line). BuildingArt.tsx: SVG isometric building above each card (MapSpot); no quad text. Name: Verdant (Fraunces font, leaf icon).
 - Sizes realistic (~10–15 kWh/sq ft/yr): peaks 1,400/500/800/350 kW. Full-night HVAC ≈ $180/day, $66k/yr.
 - Decided: fixes already marked done still count as savings achieved after Ignore.
 - Decided: never random. A fix with fixesProblem ends the spike → green. Finals has none
