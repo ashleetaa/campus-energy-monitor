@@ -139,9 +139,9 @@ export const SCENARIOS: Scenario[] = [
   },
 ]
 
-export const DEFAULT_SCENARIO_ID = 'hvac'
-
-export function findScenario(id: string): Scenario {
+// Finds a scenario by id. With no id (nothing picked yet), returns the first
+// one as a stand-in; the spike can't start until one is picked anyway.
+export function findScenario(id: string | null): Scenario {
   return SCENARIOS.find((scenario) => scenario.id === id) ?? SCENARIOS[0]
 }
 

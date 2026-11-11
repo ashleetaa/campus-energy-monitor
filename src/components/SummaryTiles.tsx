@@ -1,6 +1,7 @@
 // The row of 4 tiles at the top of the dashboard: total campus power,
 // active alerts, and the "Monthly savings" numbers:
-// available = fixes not done yet, achieved = fixes marked done.
+// available = fixes not done yet (none if the alert was ignored),
+// achieved = fixes marked done (these still count after ignoring).
 
 import { AlertTriangle, CheckCircle2, Leaf, Zap, type LucideIcon } from 'lucide-react'
 import type { ReactNode } from 'react'
@@ -12,6 +13,7 @@ type Props = {
   activeAlerts: number
   recommendations: Recommendation[]
   doneIds: string[]
+  ignored: boolean // true when the manager chose "Ignore, this was expected"
 }
 
 function total(recs: Recommendation[]): number {
@@ -40,9 +42,11 @@ function Tile(props: { icon: LucideIcon; color: string; tint: string; label: str
   )
 }
 
-export default function SummaryTiles({ campusKw, activeAlerts, recommendations, doneIds }: Props) {
+export default function SummaryTiles({ campusKw, activeAlerts, recommendations, doneIds, ignored }: Props) {
+  // Work already done keeps saving money even if the rest is ignored.
   const done = recommendations.filter((rec) => doneIds.includes(rec.id))
-  const open = recommendations.filter((rec) => !doneIds.includes(rec.id))
+  // Ignored fixes don't count as savings available.
+  const open = ignored ? [] : recommendations.filter((rec) => !doneIds.includes(rec.id))
 
   return (
     <section className="mb-6 grid gap-4 sm:grid-cols-2 xl:grid-cols-4">

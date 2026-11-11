@@ -83,7 +83,7 @@ export default function App() {
         </div>
         {tab === 'monitor' && (
           <DemoControls
-            scenarioId={scenario.id}
+            scenarioId={energy.scenarioId}
             onSelectScenario={energy.selectScenario}
             spikeOn={energy.spikeOn}
             onSimulateSpike={energy.simulateSpike}
@@ -134,12 +134,13 @@ export default function App() {
         </BuildingDetail>
       ) : (
         <>
-          {/* Ignored fixes don't count as savings available. */}
+          {/* Ignored fixes don't count as savings available; ones already done still count as achieved. */}
           <SummaryTiles
             campusKw={readings.reduce((sum, reading) => sum + reading.kw, 0)}
             activeAlerts={alerts.filter((alert) => !isIgnored(alert.building.id)).length}
-            recommendations={energy.decision === 'ignored' ? [] : recommendations}
+            recommendations={recommendations}
             doneIds={energy.doneIds}
+            ignored={energy.decision === 'ignored'}
           />
 
           {/* Wide screens: cards on the left (2 of 3 columns), alert panel on the right.

@@ -46,11 +46,13 @@ All data is simulated in the browser.
    can be reviewed again). Ignored fixes don't count toward savings available.
 8. Three fixed scenarios (never random), picked from a dropdown in Demo controls.
    Each has its own building, hours, pattern, root cause, suggested choice and fixes:
-   - HVAC left on overnight (default): Zachary Engineering Education Complex, +40%,
+   - HVAC left on overnight: Zachary Engineering Education Complex, +40%,
      10pm–6am → Make changes.
    - Lights left on all night: Hullabaloo Hall, +45%, midnight–7am → Make changes.
    - Finals week: Sterling C. Evans Library, +40%, 10pm–4am → suggested Ignore
      (expected); only optional ways to reduce it, nothing that "fixes" it.
+   No default: the dropdown starts at "Select a scenario…" and Simulate spike is
+   disabled until one is picked. Reset keeps the last pick.
    Best demo time for all three: 7am–10pm.
 9. "Savings estimator" tab (next to "Live monitor"): sliders for number of buildings,
    average monthly energy cost per building, estimated reduction % and cost to set
@@ -91,6 +93,7 @@ anything I decided. Keep it under 10 lines.)
 - `src/components/`: BuildingCard, BuildingDetail (chart), AlertPanel, Alert/Ignored/ResolvedBanner, RecommendationList, SummaryTiles, DemoControls, SavingsEstimator.
 - Redesign (Nov 11, from a mockup): lucide-react icons OK'd. Choices: styled cards (no map), alert as side panel. R1 done: header + 4 KPI tiles (SummaryTiles replaced SavingsSummary; no sparkline). R2 done: card icons + status pills. R3 done: AlertPanel (status chip + red/gray/green banner or All clear) right of cards on xl, above them on narrow screens; banners now stack vertically. R4 done: detail header card + cost tiles, icons in fixes and estimator; building icons shared in buildingIcons.ts. Redesign complete. Then added CampusMap (decorative lawn, paths, quad, trees, other buildings; hidden on phones) and compact cards (icon, name, kW, pill, small "Today: kWh · $" line).
 - Sizes realistic (~10–15 kWh/sq ft/yr): peaks 1,400/500/800/350 kW. Full-night HVAC ≈ $180/day, $66k/yr.
+- Decided: fixes already marked done still count as savings achieved after Ignore.
 - Decided: never random. A fix with fixesProblem ends the spike → green. Finals has none
   (suggested Ignore). Best demo time 7am–10pm (all 3 show full numbers). No 18% claim.
 

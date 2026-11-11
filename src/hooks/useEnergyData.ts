@@ -8,7 +8,7 @@ import { useEffect, useState } from 'react'
 import { checkBuilding, findAlerts } from '../data/alerts'
 import { BUILDINGS, type Building } from '../data/buildings'
 import { recommendationsFor } from '../data/recommendations'
-import { DEFAULT_SCENARIO_ID, findScenario, spikeFor } from '../data/scenarios'
+import { findScenario, spikeFor } from '../data/scenarios'
 import { costOf, currentKw, todayKwh } from '../data/simulate'
 
 const UPDATE_EVERY_MS = 3000
@@ -25,7 +25,7 @@ export type Reading = {
 
 export function useEnergyData() {
   const [now, setNow] = useState(() => new Date())
-  const [scenarioId, setScenarioId] = useState(DEFAULT_SCENARIO_ID)
+  const [scenarioId, setScenarioId] = useState<string | null>(null) // null until one is picked
   const [spikeOn, setSpikeOn] = useState(false)
   const [doneIds, setDoneIds] = useState<string[]>([]) // recommendations marked done
   const [decision, setDecision] = useState<Decision>('undecided')
@@ -58,6 +58,7 @@ export function useEnergyData() {
     readings,
     alerts: findAlerts(now, spike),
     scenario,
+    scenarioId,
     selectScenario: setScenarioId,
     spikeOn,
     spike,
@@ -68,7 +69,7 @@ export function useEnergyData() {
     markDone: (id: string) => setDoneIds((ids) => [...ids, id]),
     decision,
     decide: setDecision,
-    simulateSpike: () => setSpikeOn(true),
+    simulateSpike: () => setSpikeOn(scenarioId !== null), // needs a scenario picked first
     reset: () => {
       setSpikeOn(false)
       setDoneIds([])

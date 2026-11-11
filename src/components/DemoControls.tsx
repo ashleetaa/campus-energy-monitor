@@ -6,7 +6,7 @@ import { Monitor } from 'lucide-react'
 import { SCENARIOS } from '../data/scenarios'
 
 type Props = {
-  scenarioId: string
+  scenarioId: string | null // null until a scenario is picked
   onSelectScenario: (id: string) => void
   spikeOn: boolean
   onSimulateSpike: () => void
@@ -21,12 +21,15 @@ export default function DemoControls({ scenarioId, onSelectScenario, spikeOn, on
         Demo controls
       </p>
       <select
-        value={scenarioId}
+        value={scenarioId ?? ''}
         onChange={(event) => onSelectScenario(event.target.value)}
         disabled={spikeOn} // reset first to switch scenarios
         aria-label="Scenario"
         className="rounded-lg border border-slate-300 bg-white px-2 py-2 text-sm text-slate-700 disabled:opacity-50"
       >
+        <option value="" disabled>
+          Select a scenario…
+        </option>
         {SCENARIOS.map((scenario) => (
           <option key={scenario.id} value={scenario.id}>
             {scenario.name}
@@ -35,7 +38,7 @@ export default function DemoControls({ scenarioId, onSelectScenario, spikeOn, on
       </select>
       <button
         onClick={onSimulateSpike}
-        disabled={spikeOn}
+        disabled={spikeOn || scenarioId === null} // pick a scenario first
         className="rounded-lg bg-blue-950 px-4 py-2 text-sm font-semibold text-white hover:bg-blue-900 disabled:cursor-not-allowed disabled:opacity-40"
       >
         Simulate spike
