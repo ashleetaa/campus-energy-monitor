@@ -85,6 +85,16 @@ export default function RecommendationList({ recommendations, doneIds, onMarkDon
               <MarkDoneButton done={doneIds.includes(mainFix.id)} onClick={() => onMarkDone(mainFix.id)} />
             </div>
           )}
+
+          {/* Changed your mind? Until the fix is done, you can still ignore it. */}
+          {showFixes && !doneIds.includes(mainFix.id) && (
+            <button
+              onClick={() => onDecide('ignored')}
+              className="mt-4 text-sm font-medium text-slate-600 underline hover:text-slate-900"
+            >
+              Changed your mind? Ignore instead, this was expected
+            </button>
+          )}
         </section>
       )}
 
