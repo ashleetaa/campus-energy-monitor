@@ -10,7 +10,8 @@ export type Recommendation = {
   title: string
   detail: string // why it helps, in plain English
   monthlySavings: number // dollars per month
-  fixesProblem: boolean // true for the main fix
+  fixesProblem: boolean // true for the main fix: it removes the root cause
+  rootCause?: string // what caused the alert (only on the main fix)
 }
 
 // Round to the nearest $10, because these are estimates ("saves ~$1,780/month").
@@ -31,6 +32,9 @@ export function recommendationsFor(alert: Alert): Recommendation[] {
         "can't be left running all night again.",
       monthlySavings: roughly(alert.extraCostPerMonth), // removes all of the extra cost
       fixesProblem: true,
+      rootCause:
+        `The HVAC kept running from ${alert.fromLabel} to ${alert.toLabel} instead of switching ` +
+        'to its overnight setting, so an empty building was heated and cooled all night.',
     },
     {
       id: 'night-setpoint',

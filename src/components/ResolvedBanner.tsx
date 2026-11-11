@@ -18,7 +18,7 @@ export default function ResolvedBanner({ buildingName, monthlySavings, yearlySav
           <p className="text-sm font-semibold text-green-800 uppercase">✓ Resolved</p>
           <h2 className="mt-1 text-xl font-bold text-slate-900">{buildingName} is back to normal</h2>
           <p className="mt-1 text-slate-600">
-            The HVAC setback is scheduled. Saving about{' '}
+            Root cause fixed: the HVAC now switches to its overnight setting. Saving about{' '}
             <span className="font-semibold text-green-800">{formatDollars(monthlySavings)}/month</span> (
             {formatDollars(yearlySavings)}/year).
           </p>
