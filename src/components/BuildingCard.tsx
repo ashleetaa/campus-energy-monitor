@@ -7,10 +7,11 @@ import { formatDollars, formatKw, formatKwh } from '../data/format'
 type Props = {
   reading: Reading
   needsAttention: boolean // true when this building has an alert
+  ignored: boolean // true when its alert was marked as expected
   onClick: () => void // opens this building's detail screen
 }
 
-export default function BuildingCard({ reading, needsAttention, onClick }: Props) {
+export default function BuildingCard({ reading, needsAttention, ignored, onClick }: Props) {
   const { building, kw, kwh, cost } = reading
   const border = needsAttention
     ? 'border-2 border-red-500 hover:border-red-600'
@@ -24,6 +25,11 @@ export default function BuildingCard({ reading, needsAttention, onClick }: Props
       {needsAttention && (
         <p className="mb-2 inline-block rounded-full bg-red-100 px-2.5 py-0.5 text-xs font-semibold text-red-700">
           ⚠ Needs attention
+        </p>
+      )}
+      {ignored && (
+        <p className="mb-2 inline-block rounded-full bg-slate-200 px-2.5 py-0.5 text-xs font-semibold text-slate-700">
+          Alert ignored (expected)
         </p>
       )}
       <h2 className="text-lg font-semibold text-slate-900">{building.name}</h2>

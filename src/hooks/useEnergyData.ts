@@ -11,6 +11,9 @@ import { MAIN_FIX_ID, recommendationsFor } from '../data/recommendations'
 import { costOf, currentKw, SPIKE_BUILDING_ID, todayKwh } from '../data/simulate'
 
 const UPDATE_EVERY_MS = 3000
+
+// What the manager chose to do about the alert.
+export type Decision = 'undecided' | 'fixing' | 'ignored'
 const SPIKE_BUILDING = BUILDINGS.find((building) => building.id === SPIKE_BUILDING_ID)!
 
 export type Reading = {
@@ -24,6 +27,7 @@ export function useEnergyData() {
   const [now, setNow] = useState(() => new Date())
   const [spikeOn, setSpikeOn] = useState(false)
   const [doneIds, setDoneIds] = useState<string[]>([]) // recommendations marked done
+  const [decision, setDecision] = useState<Decision>('undecided')
 
   useEffect(() => {
     const timer = setInterval(() => setNow(new Date()), UPDATE_EVERY_MS)
@@ -55,10 +59,13 @@ export function useEnergyData() {
     recommendations,
     doneIds,
     markDone: (id: string) => setDoneIds((ids) => [...ids, id]),
+    decision,
+    decide: setDecision,
     simulateSpike: () => setSpikeOn(true),
     reset: () => {
       setSpikeOn(false)
       setDoneIds([])
+      setDecision('undecided')
     },
   }
 }

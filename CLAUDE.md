@@ -39,8 +39,13 @@ All data is simulated in the browser.
 6. A "Monthly savings" summary at the top of the dashboard: savings available
    (from open recommendations) and savings achieved (from ones marked done).
 
-Demo flow: normal dashboard → Simulate spike → red banner + red card → click into
-the chart (shaded overnight) → recommendations → Mark as done → savings achieved.
+7. Decide what to do: the alert stays red until the manager looks into it. On the
+   detail screen they see the root cause and choose "Make changes" (shows the fixes)
+   or "Ignore, this was expected" (alert turns gray, still shows what it costs, and
+   can be reviewed again). Ignored fixes don't count toward savings available.
+
+Demo flow: normal dashboard → Simulate spike → red banner + red card → Look into it
+→ root cause → Make changes → Mark as done → savings achieved.
 
 ## Demo story
 A campus facilities manager wants to know where the energy money goes. The app shows
@@ -62,12 +67,13 @@ recommends a fix. The pitch uses the dollar amount the app calculates.
 ## Progress
 (Claude: after each step, update this list: what's done, what files matter,
 anything I decided. Keep it under 10 lines.)
-- All steps 0–6 done. Vite 8 + React 19 + TS + Tailwind v4 (`@tailwindcss/vite`) + Recharts 3.
+- All steps 0–7 done. Vite 8 + React 19 + TS + Tailwind v4 (`@tailwindcss/vite`) + Recharts 3.
 - `src/data/`: `buildings.ts` (peak kW + 24-hour pattern), `simulate.ts` (kW/kWh/cost, spike,
   last 24h vs last week, fixed ±3% history wobble), `alerts.ts` (≥30% hours, $/day ×30 ×365),
   `recommendations.ts` (3 fixes), `format.ts`. `src/hooks/useEnergyData.ts`: 3s timer + demo state.
 - `src/components/`: BuildingCard, BuildingDetail (chart), AlertBanner, RecommendationList,
-  ResolvedBanner, SavingsSummary, DemoControls. `App.tsx` switches dashboard ↔ detail.
+  ResolvedBanner, IgnoredBanner, SavingsSummary, DemoControls. `App.tsx`: dashboard ↔ detail.
+- Step 7: hook `decision` (undecided/fixing/ignored). Fixes hidden until "Make changes"; ignore → gray.
 - Decided: spike is always Engineering Hall 10pm–6am, +40%. Marking the main fix (HVAC setback)
   done ends the spike → green banner. Savings available = open fixes, achieved = done fixes.
 - Demo controls (Simulate spike, Reset) sit bottom-right. No 18% claim; pitch the app's dollars.

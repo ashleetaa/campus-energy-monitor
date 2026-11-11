@@ -6,9 +6,11 @@ import AlertBanner from './components/AlertBanner'
 import BuildingCard from './components/BuildingCard'
 import BuildingDetail from './components/BuildingDetail'
 import DemoControls from './components/DemoControls'
+import IgnoredBanner from './components/IgnoredBanner'
 import RecommendationList from './components/RecommendationList'
 import ResolvedBanner from './components/ResolvedBanner'
 import SavingsSummary from './components/SavingsSummary'
+import type { Alert } from './data/alerts'
 import { MAIN_FIX_ID } from './data/recommendations'
 import { useEnergyData } from './hooks/useEnergyData'
 
@@ -20,6 +22,23 @@ export default function App() {
   const [selectedId, setSelectedId] = useState<string | null>(null)
   const selected = readings.find((reading) => reading.building.id === selectedId)
   const alertFor = (buildingId: string) => alerts.find((alert) => alert.building.id === buildingId)
+
+  // The manager can choose to ignore the alert (e.g. a planned overnight event).
+  const isIgnored = (buildingId: string) =>
+    energy.decision === 'ignored' && buildingId === spikeAlert?.building.id
+
+  // Red banner normally; gray banner once ignored. The dashboard version has a
+  // button that opens the building.
+  const banner = (alert: Alert, onDashboard: boolean) =>
+    isIgnored(alert.building.id) ? (
+      <IgnoredBanner key={alert.building.id} alert={alert} onReview={() => energy.decide('undecided')} />
+    ) : (
+      <AlertBanner
+        key={alert.building.id}
+        alert={alert}
+        onViewChart={onDashboard ? () => setSelectedId(alert.building.id) : undefined}
+      />
+    )
 
   // Shown once the main fix is marked done.
   const mainFix = recommendations.find((rec) => rec.id === MAIN_FIX_ID)
@@ -49,29 +68,29 @@ export default function App() {
           spikeOn={energy.spikeActive}
           onBack={() => setSelectedId(null)}
         >
-          {alertFor(selected.building.id) && <AlertBanner alert={alertFor(selected.building.id)!} />}
-          {selected.building.id === spikeAlert?.building.id && (
+          {alertFor(selected.building.id) && banner(alertFor(selected.building.id)!, false)}
+          {selected.building.id === spikeAlert?.building.id && !isIgnored(selected.building.id) && (
             <>
               {resolvedBanner(false)}
               <RecommendationList
                 recommendations={recommendations}
                 doneIds={energy.doneIds}
                 onMarkDone={energy.markDone}
+                decision={energy.decision}
+                onDecide={energy.decide}
               />
             </>
           )}
         </BuildingDetail>
       ) : (
         <>
-          <SavingsSummary recommendations={recommendations} doneIds={energy.doneIds} />
+          {/* Ignored fixes don't count as savings available. */}
+          <SavingsSummary
+            recommendations={energy.decision === 'ignored' ? [] : recommendations}
+            doneIds={energy.doneIds}
+          />
 
-          {alerts.map((alert) => (
-            <AlertBanner
-              key={alert.building.id}
-              alert={alert}
-              onViewChart={() => setSelectedId(alert.building.id)}
-            />
-          ))}
+          {alerts.map((alert) => banner(alert, true))}
           {resolvedBanner(true)}
 
           <div className="grid gap-6 sm:grid-cols-2 xl:grid-cols-4">
@@ -79,7 +98,8 @@ export default function App() {
               <BuildingCard
                 key={reading.building.id}
                 reading={reading}
-                needsAttention={alertFor(reading.building.id) !== undefined}
+                needsAttention={alertFor(reading.building.id) !== undefined && !isIgnored(reading.building.id)}
+                ignored={alertFor(reading.building.id) !== undefined && isIgnored(reading.building.id)}
                 onClick={() => setSelectedId(reading.building.id)}
               />
             ))}
