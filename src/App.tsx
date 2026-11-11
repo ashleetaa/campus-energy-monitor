@@ -53,19 +53,22 @@ export default function App() {
     ) : null
 
   return (
-    <main className="min-h-screen bg-slate-50 p-6 pb-32 md:p-10 md:pb-32">
-      <header className="mb-8">
-        <h1 className="text-3xl font-bold text-slate-900">Campus Energy Monitor</h1>
-        <p className="mt-1 text-slate-600">
-          Live power use across campus · Updated {now.toLocaleTimeString('en-US')}
-        </p>
+    <main className="min-h-screen bg-slate-50 p-6 md:p-10">
+      <header className="mb-8 flex flex-wrap items-start justify-between gap-4">
+        <div>
+          <h1 className="text-3xl font-bold text-slate-900">Campus Energy Monitor</h1>
+          <p className="mt-1 text-slate-600">
+            Live power use across campus · Updated {now.toLocaleTimeString('en-US')}
+          </p>
+        </div>
+        <DemoControls spikeOn={energy.spikeOn} onSimulateSpike={energy.simulateSpike} onReset={energy.reset} />
       </header>
 
       {selected ? (
         <BuildingDetail
           building={selected.building}
           now={now}
-          spikeOn={energy.spikeActive}
+          spikeNight={energy.spikeNight}
           onBack={() => setSelectedId(null)}
         >
           {alertFor(selected.building.id) && banner(alertFor(selected.building.id)!, false)}
@@ -107,7 +110,6 @@ export default function App() {
         </>
       )}
 
-      <DemoControls spikeOn={energy.spikeOn} onSimulateSpike={energy.simulateSpike} onReset={energy.reset} />
     </main>
   )
 }

@@ -21,7 +21,7 @@ import { costOf, last24Hours, totalKwh } from '../data/simulate'
 type Props = {
   building: Building
   now: Date
-  spikeOn: boolean
+  spikeNight: number | null // start of the spiked night, or null
   onBack: () => void
   children?: ReactNode
 }
@@ -29,8 +29,8 @@ type Props = {
 const THIS_WEEK_COLOR = '#2563eb' // blue
 const LAST_WEEK_COLOR = '#94a3b8' // gray: the "normal" baseline
 
-export default function BuildingDetail({ building, now, spikeOn, onBack, children }: Props) {
-  const points = last24Hours(building, now, spikeOn)
+export default function BuildingDetail({ building, now, spikeNight, onBack, children }: Props) {
+  const points = last24Hours(building, now, spikeNight)
   const costThisWeek = costOf(totalKwh(points, 'thisWeek'))
   const costLastWeek = costOf(totalKwh(points, 'lastWeek'))
 

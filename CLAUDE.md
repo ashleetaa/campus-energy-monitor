@@ -27,7 +27,7 @@ All data is simulated in the browser.
 3. "Simulate spike": Engineering Hall's HVAC was left running last night,
    10pm–6am, about 40% above normal for those hours. On the 24-hour chart that
    window is shaded light red and labeled "HVAC ran overnight". "Simulate spike"
-   and "Reset" sit in a small "Demo controls" box in the bottom corner, so the
+   and "Reset" sit in a small "Demo controls" box at the top-right of the header, so the
    main screen looks like a real product.
 4. Spike alert: appears when "Simulate spike" is clicked. It fires when usage is 30%+
    above the same hours last week. A red banner at the top of the dashboard shows
@@ -67,13 +67,12 @@ recommends a fix. The pitch uses the dollar amount the app calculates.
 ## Progress
 (Claude: after each step, update this list: what's done, what files matter,
 anything I decided. Keep it under 10 lines.)
-- All steps 0–7 done. Vite 8 + React 19 + TS + Tailwind v4 (`@tailwindcss/vite`) + Recharts 3.
-- `src/data/`: `buildings.ts` (peak kW + 24-hour pattern), `simulate.ts` (kW/kWh/cost, spike,
-  last 24h vs last week, fixed ±3% history wobble), `alerts.ts` (≥30% hours, $/day ×30 ×365),
-  `recommendations.ts` (3 fixes), `format.ts`. `src/hooks/useEnergyData.ts`: 3s timer + demo state.
-- `src/components/`: BuildingCard, BuildingDetail (chart), AlertBanner, RecommendationList,
-  ResolvedBanner, IgnoredBanner, SavingsSummary, DemoControls. `App.tsx`: dashboard ↔ detail.
-- Step 7: hook `decision` (undecided/fixing/ignored). Fixes hidden until "Make changes"; ignore → gray.
-- Decided: spike is always Engineering Hall 10pm–6am, +40%. Marking the main fix (HVAC setback)
-  done ends the spike → green banner. Savings available = open fixes, achieved = done fixes.
-- Demo controls (Simulate spike, Reset) sit bottom-right. No 18% claim; pitch the app's dollars.
+- Steps 0–7 done + reliability check. Vite 8, React 19, TS, Tailwind v4, Recharts 3.
+- `src/data/`: buildings (peak kW, 24h pattern), simulate (kW/kWh/cost, ±3% fixed history
+  wobble, spike = the most recent 10pm–6am night), alerts (hours ≥30% over last week,
+  $/day ×30 ×365), recommendations (root cause + 3 fixes), format. Hook: 3s timer + demo state.
+- `src/components/`: BuildingCard, BuildingDetail (chart), AlertBanner, IgnoredBanner,
+  ResolvedBanner, RecommendationList, SavingsSummary, DemoControls (top-right of header).
+- Decided: spike always Engineering Hall, +40%. Fixes hidden until "Make changes" (← Back
+  returns to the choice). Main fix done → green banner. Ignore → gray, still shows cost.
+- Best demo time 6am–10pm: alert is then always "10pm to 6am, +39%, $59/day". No 18% claim.

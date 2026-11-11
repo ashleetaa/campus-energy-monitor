@@ -5,19 +5,27 @@ import type { Building } from './buildings'
 
 export const PRICE_PER_KWH = 0.12 // dollars per kilowatt-hour
 
-// The demo spike: Engineering Hall's HVAC left running overnight (10pm–6am),
-// using about 40% more power than normal during those hours.
+// The demo spike: Engineering Hall's HVAC left running for one night
+// (10pm–6am), using about 40% more power than normal during those hours.
 export const SPIKE_BUILDING_ID = 'engineering'
 const SPIKE_EXTRA = 1.4 // 1.4 = 40% above normal
+const NIGHT_LENGTH_MS = 8 * 60 * 60 * 1000 // 10pm to 6am
 
-function isOvernight(time: Date): boolean {
-  const hour = time.getHours()
-  return hour >= 22 || hour < 6 // 10pm up to 6am
+// The start (10pm) of the night the spike happened: the most recent 10pm.
+// During the day that's last night; late at night it's tonight, still going.
+export function spikeNightStart(now: Date): number {
+  const tenPm = new Date(now)
+  tenPm.setHours(22, 0, 0, 0)
+  if (tenPm > now) tenPm.setDate(tenPm.getDate() - 1) // not 10pm yet today: use yesterday's
+  return tenPm.getTime()
 }
 
-// True if this building and time are part of the simulated spike.
-export function isSpiked(building: Building, time: Date, spikeOn: boolean): boolean {
-  return spikeOn && building.id === SPIKE_BUILDING_ID && isOvernight(time)
+// spikeNight is the start time of the spiked night, or null when there's no spike.
+// True if this building and time fall inside that one night.
+export function isSpiked(building: Building, time: Date, spikeNight: number | null): boolean {
+  if (spikeNight === null || building.id !== SPIKE_BUILDING_ID) return false
+  const t = time.getTime()
+  return t >= spikeNight && t < spikeNight + NIGHT_LENGTH_MS
 }
 
 // Normal power draw (kW) at a given time, with no randomness.
@@ -33,22 +41,22 @@ export function normalKwAt(building: Building, time: Date): number {
 }
 
 // Actual power draw: normal, plus 40% if this hour is part of the spike.
-export function actualKwAt(building: Building, time: Date, spikeOn: boolean): number {
-  const extra = isSpiked(building, time, spikeOn) ? SPIKE_EXTRA : 1
+export function actualKwAt(building: Building, time: Date, spikeNight: number | null): number {
+  const extra = isSpiked(building, time, spikeNight) ? SPIKE_EXTRA : 1
   return normalKwAt(building, time) * extra
 }
 
 // What the meter shows right now: actual draw plus a small ±3% wobble,
 // so the numbers move like a real meter.
-export function currentKw(building: Building, time: Date, spikeOn: boolean): number {
+export function currentKw(building: Building, time: Date, spikeNight: number | null): number {
   const wobble = 1 + (Math.random() * 0.06 - 0.03)
-  return actualKwAt(building, time, spikeOn) * wobble
+  return actualKwAt(building, time, spikeNight) * wobble
 }
 
 // Energy used since midnight (kWh). Adds up the power for every minute
 // so far today: each minute uses kW × (1/60) of an hour.
 // Based on the clock, so it's always correct even if the browser tab sleeps.
-export function todayKwh(building: Building, now: Date, spikeOn: boolean): number {
+export function todayKwh(building: Building, now: Date, spikeNight: number | null): number {
   const midnight = new Date(now)
   midnight.setHours(0, 0, 0, 0)
   const minutesSoFar = Math.floor((now.getTime() - midnight.getTime()) / 60000)
@@ -56,7 +64,7 @@ export function todayKwh(building: Building, now: Date, spikeOn: boolean): numbe
   let total = 0
   for (let minute = 0; minute < minutesSoFar; minute++) {
     const time = new Date(midnight.getTime() + minute * 60000)
-    total += actualKwAt(building, time, spikeOn) / 60
+    total += actualKwAt(building, time, spikeNight) / 60
   }
   return total
 }
@@ -81,8 +89,8 @@ function steadyWobble(building: Building, time: Date): number {
 }
 
 // Recorded power (kW) for an hour in the past.
-export function pastKwAt(building: Building, time: Date, spikeOn: boolean): number {
-  return actualKwAt(building, time, spikeOn) * steadyWobble(building, time)
+export function pastKwAt(building: Building, time: Date, spikeNight: number | null): number {
+  return actualKwAt(building, time, spikeNight) * steadyWobble(building, time)
 }
 
 export type HourPoint = {
@@ -94,7 +102,7 @@ export type HourPoint = {
 
 // The last 24 hours, one point per hour (oldest first), each paired with
 // the same hour one week earlier. Last week is always normal (no spike).
-export function last24Hours(building: Building, now: Date, spikeOn: boolean): HourPoint[] {
+export function last24Hours(building: Building, now: Date, spikeNight: number | null): HourPoint[] {
   const thisHour = new Date(now)
   thisHour.setMinutes(0, 0, 0)
 
@@ -104,9 +112,9 @@ export function last24Hours(building: Building, now: Date, spikeOn: boolean): Ho
     const weekBefore = new Date(time.getTime() - ONE_WEEK_MS)
     points.push({
       label: time.toLocaleTimeString('en-US', { hour: 'numeric' }).replace(' ', '').toLowerCase(),
-      thisWeek: Math.round(pastKwAt(building, time, spikeOn)),
-      lastWeek: Math.round(pastKwAt(building, weekBefore, false)),
-      spiked: isSpiked(building, time, spikeOn),
+      thisWeek: Math.round(pastKwAt(building, time, spikeNight)),
+      lastWeek: Math.round(pastKwAt(building, weekBefore, null)),
+      spiked: isSpiked(building, time, spikeNight),
     })
   }
   return points

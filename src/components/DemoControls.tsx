@@ -1,5 +1,6 @@
-// A small box in the bottom corner with buttons for running the demo.
-// Kept out of the way so the main screen looks like the real product.
+// A small box in the top-right of the header with buttons for running the demo.
+// Kept small and out of the way so the main screen looks like the real product,
+// and it never covers other buttons.
 
 type Props = {
   spikeOn: boolean
@@ -9,7 +10,7 @@ type Props = {
 
 export default function DemoControls({ spikeOn, onSimulateSpike, onReset }: Props) {
   return (
-    <div className="fixed right-4 bottom-4 rounded-lg border border-slate-200 bg-white/95 p-3 shadow-md">
+    <div className="rounded-lg border border-slate-200 bg-white p-3">
       <p className="mb-2 text-xs font-semibold tracking-wide text-slate-400 uppercase">Demo controls</p>
       <div className="flex gap-2">
         <button

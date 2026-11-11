@@ -18,8 +18,8 @@ export type Alert = {
 }
 
 // Look at one building. Returns an Alert, or null if everything is normal.
-export function checkBuilding(building: Building, now: Date, spikeOn: boolean): Alert | null {
-  const points = last24Hours(building, now, spikeOn)
+export function checkBuilding(building: Building, now: Date, spikeNight: number | null): Alert | null {
+  const points = last24Hours(building, now, spikeNight)
   const isUnusual = (point: HourPoint) => point.thisWeek >= point.lastWeek * ALERT_THRESHOLD
 
   const unusual = points.filter(isUnusual)
@@ -31,13 +31,15 @@ export function checkBuilding(building: Building, now: Date, spikeOn: boolean): 
   const extraCostPerDay = costOf(thisWeekKwh - lastWeekKwh)
 
   // The unusual period ends at the start of the first normal hour after it.
+  // If the latest hour is still unusual, it's still going on: "to now".
   const lastUnusual = points.findLastIndex(isUnusual)
-  const endPoint = points[Math.min(lastUnusual + 1, points.length - 1)]
+  const stillGoing = lastUnusual === points.length - 1
+  const toLabel = stillGoing ? 'now' : points[lastUnusual + 1].label
 
   return {
     building,
     fromLabel: unusual[0].label,
-    toLabel: endPoint.label,
+    toLabel,
     percentAbove: Math.round((thisWeekKwh / lastWeekKwh - 1) * 100),
     extraCostPerDay,
     // If it keeps happening every night:
@@ -48,8 +50,8 @@ export function checkBuilding(building: Building, now: Date, spikeOn: boolean): 
 }
 
 // Check every building and return the ones with an alert.
-export function findAlerts(now: Date, spikeOn: boolean): Alert[] {
-  return BUILDINGS.map((building) => checkBuilding(building, now, spikeOn)).filter(
+export function findAlerts(now: Date, spikeNight: number | null): Alert[] {
+  return BUILDINGS.map((building) => checkBuilding(building, now, spikeNight)).filter(
     (alert): alert is Alert => alert !== null,
   )
 }

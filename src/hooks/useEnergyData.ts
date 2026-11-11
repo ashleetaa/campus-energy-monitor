@@ -8,7 +8,7 @@ import { useEffect, useState } from 'react'
 import { checkBuilding, findAlerts } from '../data/alerts'
 import { BUILDINGS, type Building } from '../data/buildings'
 import { MAIN_FIX_ID, recommendationsFor } from '../data/recommendations'
-import { costOf, currentKw, SPIKE_BUILDING_ID, todayKwh } from '../data/simulate'
+import { costOf, currentKw, SPIKE_BUILDING_ID, spikeNightStart, todayKwh } from '../data/simulate'
 
 const UPDATE_EVERY_MS = 3000
 
@@ -37,23 +37,25 @@ export function useEnergyData() {
   // Once the main fix is done, the spike stops and the building is back to normal.
   const resolved = spikeOn && doneIds.includes(MAIN_FIX_ID)
   const spikeActive = spikeOn && !resolved
+  // The spiked night (its 10pm start time), or null when there's no active spike.
+  const spikeNight = spikeActive ? spikeNightStart(now) : null
 
   const readings: Reading[] = BUILDINGS.map((building) => {
-    const kwh = todayKwh(building, now, spikeActive)
-    return { building, kw: currentKw(building, now, spikeActive), kwh, cost: costOf(kwh) }
+    const kwh = todayKwh(building, now, spikeNight)
+    return { building, kw: currentKw(building, now, spikeNight), kwh, cost: costOf(kwh) }
   })
 
   // The recommendations stay on screen after the fix, so the other ones can
   // still be marked done. Their savings are worked out as if the spike were on.
-  const spikeAlert = spikeOn ? checkBuilding(SPIKE_BUILDING, now, true) : null
+  const spikeAlert = spikeOn ? checkBuilding(SPIKE_BUILDING, now, spikeNightStart(now)) : null
   const recommendations = spikeAlert ? recommendationsFor(spikeAlert) : []
 
   return {
     now,
     readings,
-    alerts: findAlerts(now, spikeActive),
+    alerts: findAlerts(now, spikeNight),
     spikeOn,
-    spikeActive,
+    spikeNight,
     resolved,
     spikeAlert,
     recommendations,

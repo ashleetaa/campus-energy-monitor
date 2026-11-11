@@ -26,7 +26,7 @@ export function recommendationsFor(alert: Alert): Recommendation[] {
   return [
     {
       id: MAIN_FIX_ID,
-      title: `Schedule HVAC setback ${alert.fromLabel}–${alert.toLabel}`,
+      title: 'Schedule HVAC setback 10pm–6am', // the building's normal overnight hours
       detail:
         'Set the building automation system to "unoccupied" overnight, so heating and cooling ' +
         "can't be left running all night again.",
