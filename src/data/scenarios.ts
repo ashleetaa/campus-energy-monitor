@@ -34,7 +34,7 @@ export const SCENARIOS: Scenario[] = [
   {
     id: 'hvac',
     name: 'HVAC left on overnight',
-    buildingId: 'engineering',
+    buildingId: 'zachary',
     startHour: 22,
     lengthHours: 8,
     extra: 1.4,
@@ -72,35 +72,35 @@ export const SCENARIOS: Scenario[] = [
   },
   {
     id: 'lights',
-    name: 'Lights left on after closing',
-    buildingId: 'library',
+    name: 'Lights left on all night',
+    buildingId: 'hullabaloo',
     startHour: 0,
     lengthHours: 7,
     extra: 1.45,
-    chartLabel: 'Lights on after closing',
+    chartLabel: 'Lights on all night',
     suggestion: 'fix',
     rootCause: (alert) =>
-      `Lights and study-room computers stayed on from ${alert.fromLabel} to ${alert.toLabel}, after the ` +
-      'library closed at midnight, so an empty building was lit and powered all night.',
-    resolvedText: 'Root cause fixed: library lights now switch off automatically after closing.',
+      `Hallway, lounge and study-room lights stayed at full brightness from ${alert.fromLabel} to ` +
+      `${alert.toLabel} instead of dimming to night mode, while most residents were asleep.`,
+    resolvedText: 'Root cause fixed: common-area lights now dim automatically at night.',
     fixes: [
       {
-        id: 'lighting-schedule',
-        title: 'Put library lights on an automatic schedule (off after midnight)',
-        detail: 'Lighting controls switch lights off after closing; motion sensors turn them on for night staff.',
+        id: 'night-lighting',
+        title: 'Put common-area lights on a night schedule (dim 12am–7am)',
+        detail: 'Lighting controls dim hallways and switch off empty lounges; motion sensors bring them up when someone walks by.',
         fixesProblem: true,
         monthlySavings: (alert) => alert.extraCostPerMonth, // removes all of the extra cost
       },
       {
-        id: 'computer-sleep',
-        title: 'Set study-room computers to sleep after 30 minutes',
-        detail: 'Idle computers use power all night for no one.',
+        id: 'motion-sensors',
+        title: 'Add motion sensors to laundry and study rooms',
+        detail: 'Lights in rooms nobody is using switch off on their own.',
         fixesProblem: false,
         monthlySavings: (alert) => normalPerMonth(alert) * 0.06, // ~6% of normal overnight cost
       },
       {
         id: 'led-upgrade',
-        title: 'Switch the remaining older lights to LED',
+        title: 'Switch the remaining older hallway lights to LED',
         detail: 'LEDs use about half the power for the same light.',
         fixesProblem: false,
         monthlySavings: (alert) => normalPerMonth(alert) * 0.1, // ~10% of normal overnight cost
@@ -110,28 +110,28 @@ export const SCENARIOS: Scenario[] = [
   {
     id: 'finals',
     name: 'Finals week (expected)',
-    buildingId: 'dorm-a',
-    startHour: 18,
+    buildingId: 'evans-library',
+    startHour: 22,
     lengthHours: 6,
     extra: 1.4,
-    chartLabel: 'Finals week evenings',
+    chartLabel: 'Finals week late hours',
     suggestion: 'ignore',
     rootCause: (alert) =>
-      `More students are in Dorm A from ${alert.fromLabel} to ${alert.toLabel} studying for finals, so ` +
-      'lights, laptops and heating are used more. This is expected and ends when finals are over.',
+      `The library is staying open late for finals, so more students are studying from ${alert.fromLabel} ` +
+      `to ${alert.toLabel} with lights, computers and heating on. This is expected and ends when finals are over.`,
     resolvedText: '', // nothing here "fixes" it, so this scenario is never resolved
     fixes: [
       {
-        id: 'thermostat-cap',
-        title: 'Cap room thermostats at 70°F during finals',
-        detail: 'Keeps rooms comfortable while trimming the extra heating.',
+        id: 'one-floor-late',
+        title: 'Keep only one or two floors open after midnight',
+        detail: 'Students still have a place to study, and the other floors can power down.',
         fixesProblem: false,
-        monthlySavings: (alert) => alert.extraCostPerMonth * 0.2, // ~20% of the extra cost
+        monthlySavings: (alert) => alert.extraCostPerMonth * 0.25, // ~25% of the extra cost
       },
       {
-        id: 'resident-reminder',
-        title: 'Send residents an energy-saving reminder',
-        detail: 'Lights off in empty rooms, chargers unplugged, windows closed.',
+        id: 'computer-sleep',
+        title: 'Set library computers to sleep after 30 minutes',
+        detail: 'Idle computers use power all night for no one.',
         fixesProblem: false,
         monthlySavings: (alert) => alert.extraCostPerMonth * 0.1, // ~10% of the extra cost
       },

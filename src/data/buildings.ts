@@ -12,8 +12,8 @@ export type Building = {
 
 export const BUILDINGS: Building[] = [
   {
-    id: 'engineering',
-    name: 'Engineering Hall',
+    id: 'zachary',
+    name: 'Zachary Engineering Education Complex',
     description: 'Labs and classrooms, busiest 9am–5pm',
     peakKw: 450,
     dailyPattern: [
@@ -22,9 +22,9 @@ export const BUILDINGS: Building[] = [
     ],
   },
   {
-    id: 'library',
-    name: 'Library',
-    description: 'Open late, busiest in the evening',
+    id: 'evans-library',
+    name: 'Sterling C. Evans Library',
+    description: 'Main library, open late, busiest in the evening',
     peakKw: 220,
     dailyPattern: [
       0.35, 0.32, 0.3, 0.3, 0.3, 0.32, 0.4, 0.55, 0.75, 0.88, 0.92, 0.95,
@@ -33,7 +33,7 @@ export const BUILDINGS: Building[] = [
   },
   {
     id: 'rec-center',
-    name: 'Rec Center',
+    name: 'Student Recreation Center',
     description: 'Gym and pool, busy early morning and evening',
     peakKw: 300,
     dailyPattern: [
@@ -42,9 +42,9 @@ export const BUILDINGS: Building[] = [
     ],
   },
   {
-    id: 'dorm-a',
-    name: 'Dorm A',
-    description: 'Student housing, busiest in the evening',
+    id: 'hullabaloo',
+    name: 'Hullabaloo Hall',
+    description: 'Residence hall, busiest in the evening',
     peakKw: 180,
     dailyPattern: [
       0.55, 0.5, 0.48, 0.47, 0.47, 0.5, 0.62, 0.75, 0.7, 0.55, 0.48, 0.47,

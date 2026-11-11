@@ -19,12 +19,13 @@ All data is simulated in the browser.
 
 ## Plan
 0. Set up the Vite + React + TypeScript + Tailwind project in this folder.
-1. Dashboard: 4 buildings (Engineering Hall, Library, Rec Center, Dorm A). Each card
+1. Dashboard: 4 buildings (Zachary Engineering Education Complex, Sterling C. Evans
+   Library, Student Recreation Center, Hullabaloo Hall). Each card
    shows current kW, today's kWh and today's cost. Readings update every 3 seconds,
    higher by day and lower at night.
 2. Building detail: click a building to see a 24-hour line chart vs. the same hours
    last week.
-3. "Simulate spike": Engineering Hall's HVAC was left running last night,
+3. "Simulate spike": the Zachary Engineering Education Complex's HVAC was left running last night,
    10pm–6am, about 40% above normal for those hours. On the 24-hour chart that
    window is shaded light red and labeled "HVAC ran overnight". "Simulate spike"
    and "Reset" sit in a small "Demo controls" box at the top-right of the header, so the
@@ -45,11 +46,12 @@ All data is simulated in the browser.
    can be reviewed again). Ignored fixes don't count toward savings available.
 8. Three fixed scenarios (never random), picked from a dropdown in Demo controls.
    Each has its own building, hours, pattern, root cause, suggested choice and fixes:
-   - HVAC left on overnight (default): Engineering Hall, +40%, 10pm–6am → Make changes.
-   - Lights left on after closing: Library, +45%, midnight–7am → Make changes.
-   - Finals week: Dorm A, +40%, 6pm–midnight → suggested Ignore (expected); only
-     optional ways to reduce it, nothing that "fixes" it.
-   Best demo time for all three: 7am–6pm.
+   - HVAC left on overnight (default): Zachary Engineering Education Complex, +40%,
+     10pm–6am → Make changes.
+   - Lights left on all night: Hullabaloo Hall, +45%, midnight–7am → Make changes.
+   - Finals week: Sterling C. Evans Library, +40%, 10pm–4am → suggested Ignore
+     (expected); only optional ways to reduce it, nothing that "fixes" it.
+   Best demo time for all three: 7am–10pm.
 
 Demo flow: normal dashboard → Simulate spike → red banner + red card → Look into it
 → root cause → Make changes → Mark as done → savings achieved.
@@ -82,4 +84,4 @@ anything I decided. Keep it under 10 lines.)
 - `src/components/`: BuildingCard, BuildingDetail (chart), AlertBanner, IgnoredBanner,
   ResolvedBanner, RecommendationList, SavingsSummary, DemoControls (dropdown, top-right).
 - Decided: never random. A fix with fixesProblem ends the spike → green. Finals has none
-  (suggested Ignore). Best demo time 7am–6pm (all 3 show full numbers). No 18% claim.
+  (suggested Ignore). Best demo time 7am–10pm (all 3 show full numbers). No 18% claim.
