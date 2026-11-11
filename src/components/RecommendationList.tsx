@@ -4,6 +4,7 @@
 // 2. After "Make changes": the one fix that solves it (highlighted, if there
 //    is one), plus optional ways to save more.
 
+import { ArrowLeft, CheckCircle2, Lightbulb, Search, Wrench } from 'lucide-react'
 import { formatDollars } from '../data/format'
 import type { Recommendation } from '../data/recommendations'
 import type { Decision } from '../hooks/useEnergyData'
@@ -20,12 +21,17 @@ type Props = {
 
 function MarkDoneButton({ done, onClick }: { done: boolean; onClick: () => void }) {
   if (done) {
-    return <p className="w-32 text-center text-sm font-semibold text-green-700">✓ Done</p>
+    return (
+      <p className="flex w-32 items-center justify-center gap-1 text-sm font-semibold text-green-700">
+        <CheckCircle2 className="size-4" />
+        Done
+      </p>
+    )
   }
   return (
     <button
       onClick={onClick}
-      className="w-32 rounded-md bg-green-700 px-3 py-2 text-sm font-medium text-white hover:bg-green-800"
+      className="w-32 rounded-lg bg-green-700 px-3 py-2 text-sm font-semibold text-white hover:bg-green-800"
     >
       Mark as done
     </button>
@@ -58,11 +64,14 @@ export default function RecommendationList({
   return (
     <div className="mb-6 space-y-6">
       <section
-        className={`rounded-xl border-2 p-5 shadow-sm ${
+        className={`rounded-2xl border-2 p-5 shadow-sm ${
           mainFixDone ? 'border-green-500 bg-green-50' : 'border-blue-600 bg-blue-50'
         }`}
       >
-        <p className="text-sm font-semibold text-blue-800 uppercase">Root cause</p>
+        <p className="flex items-center gap-1.5 text-sm font-semibold text-blue-800 uppercase">
+          <Search className="size-4" />
+          Root cause
+        </p>
         <p className="mt-1 text-lg text-slate-900">{rootCause}</p>
 
         {!showFixes && (
@@ -71,14 +80,14 @@ export default function RecommendationList({
             <div className="mt-3 flex flex-wrap items-center gap-3">
               <button
                 onClick={() => onDecide('fixing')}
-                className="rounded-md bg-blue-700 px-4 py-2 text-sm font-medium text-white hover:bg-blue-800"
+                className="rounded-lg bg-blue-950 px-4 py-2.5 text-sm font-semibold text-white hover:bg-blue-900"
               >
                 Make changes
                 {suggestion === 'fix' && <SuggestedTag />}
               </button>
               <button
                 onClick={() => onDecide('ignored')}
-                className="rounded-md border border-slate-400 bg-white px-4 py-2 text-sm font-medium text-slate-700 hover:bg-slate-100"
+                className="rounded-lg border border-slate-400 bg-white px-4 py-2.5 text-sm font-semibold text-slate-700 hover:bg-slate-100"
               >
                 Ignore, this was expected
                 {suggestion === 'ignore' && <SuggestedTag />}
@@ -89,6 +98,9 @@ export default function RecommendationList({
 
         {showFixes && mainFix && (
           <div className="mt-4 flex flex-wrap items-center justify-between gap-4 border-t border-blue-200 pt-4">
+            <div className="flex size-12 shrink-0 items-center justify-center rounded-xl bg-white text-blue-800 shadow-sm">
+              <Wrench className="size-6" />
+            </div>
             <div className="min-w-0 flex-1">
               <p className="text-sm font-semibold text-slate-600">The fix: this alone solves the problem</p>
               <p className="text-xl font-bold text-slate-900">{mainFix.title}</p>
@@ -116,17 +128,19 @@ export default function RecommendationList({
             <p className="text-sm text-slate-600">Changed your mind?</p>
             <button
               onClick={() => onDecide('undecided')}
-              className="rounded-md border border-slate-400 bg-white px-3 py-1.5 text-sm font-medium text-slate-700 hover:bg-slate-100"
+              className="flex items-center gap-1 rounded-lg border border-slate-400 bg-white px-3 py-1.5 text-sm font-medium text-slate-700 hover:bg-slate-100"
             >
-              ← Back
+              <ArrowLeft className="size-4" />
+              Back
             </button>
           </div>
         )}
       </section>
 
       {showFixes && extras.length > 0 && (
-        <section className="rounded-xl border border-slate-200 bg-white p-5 shadow-sm">
-          <h3 className="font-semibold text-slate-900">
+        <section className="rounded-2xl border border-slate-200 bg-white p-5 shadow-sm">
+          <h3 className="flex items-center gap-2 font-semibold text-slate-900">
+            <Lightbulb className="size-5 text-amber-600" />
             {mainFix ? 'Save even more (optional)' : 'Ways to trim it (optional)'}
           </h3>
           <p className="mb-4 text-sm text-slate-500">
@@ -140,7 +154,7 @@ export default function RecommendationList({
               return (
                 <li
                   key={rec.id}
-                  className={`flex flex-wrap items-center justify-between gap-4 rounded-lg border p-4 ${
+                  className={`flex flex-wrap items-center justify-between gap-4 rounded-xl border p-4 ${
                     done ? 'border-green-200 bg-green-50' : 'border-slate-200'
                   }`}
                 >

@@ -1,6 +1,7 @@
 // The "Savings estimator" tab: sliders that scale the demo's savings to any
 // campus, plus how fast the setup cost pays for itself.
 
+import { Building2, CalendarCheck, Calendar, PiggyBank, TrendingUp } from 'lucide-react'
 import { useState } from 'react'
 import { campusDefaults, demoFixPercents, estimate, type EstimatorInputs } from '../data/estimator'
 import { formatDollars } from '../data/format'
@@ -52,9 +53,12 @@ export default function SavingsEstimator({ now }: { now: Date }) {
 
   return (
     <div className="grid gap-6 lg:grid-cols-2">
-      <section className="rounded-xl border border-slate-200 bg-white p-5 shadow-sm">
+      <section className="rounded-2xl border border-slate-200 bg-white p-5 shadow-sm">
         <div className="mb-4 flex flex-wrap items-baseline justify-between gap-2">
-          <h2 className="text-lg font-semibold text-slate-900">Your campus</h2>
+          <h2 className="flex items-center gap-2 text-lg font-semibold text-slate-900">
+            <Building2 className="size-5 text-blue-700" />
+            Your campus
+          </h2>
           <button
             onClick={() => setInputs(defaults)}
             className="text-sm font-medium text-blue-700 hover:underline"
@@ -111,22 +115,34 @@ export default function SavingsEstimator({ now }: { now: Date }) {
         </div>
       </section>
 
-      <section className="rounded-xl border border-slate-200 bg-white p-5 shadow-sm">
-        <h2 className="mb-4 text-lg font-semibold text-slate-900">Estimated savings</h2>
+      <section className="rounded-2xl border border-slate-200 bg-white p-5 shadow-sm">
+        <h2 className="mb-4 flex items-center gap-2 text-lg font-semibold text-slate-900">
+          <PiggyBank className="size-5 text-green-700" />
+          Estimated savings
+        </h2>
 
         <div className="grid gap-4 sm:grid-cols-2">
-          <div className="rounded-lg bg-green-50 p-4">
-            <p className="text-sm text-slate-600">Per month</p>
+          <div className="rounded-xl bg-green-50 p-4">
+            <p className="flex items-center gap-1.5 text-sm text-slate-600">
+              <Calendar className="size-4 text-green-700" />
+              Per month
+            </p>
             <p className="text-3xl font-bold text-green-700 tabular-nums">{formatDollars(result.perMonth)}</p>
           </div>
-          <div className="rounded-lg bg-green-50 p-4">
-            <p className="text-sm text-slate-600">Per year</p>
+          <div className="rounded-xl bg-green-50 p-4">
+            <p className="flex items-center gap-1.5 text-sm text-slate-600">
+              <TrendingUp className="size-4 text-green-700" />
+              Per year
+            </p>
             <p className="text-3xl font-bold text-green-700 tabular-nums">{formatDollars(result.perYear)}</p>
           </div>
         </div>
 
-        <div className="mt-4 rounded-lg bg-blue-50 p-4">
-          <p className="text-sm text-slate-600">Pays for itself in</p>
+        <div className="mt-4 rounded-xl bg-blue-50 p-4">
+          <p className="flex items-center gap-1.5 text-sm text-slate-600">
+            <CalendarCheck className="size-4 text-blue-800" />
+            Pays for itself in
+          </p>
           <p className="text-3xl font-bold text-blue-800">{paybackText(result.paybackMonths)}</p>
         </div>
 

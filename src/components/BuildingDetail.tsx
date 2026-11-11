@@ -2,6 +2,7 @@
 // compared with the same hours last week. Anything passed in as children
 // (alert, fixes) is shown above the chart, so the money comes first.
 
+import { ArrowLeft, ChartLine, DollarSign, History } from 'lucide-react'
 import type { ReactNode } from 'react'
 import {
   CartesianGrid,
@@ -17,6 +18,7 @@ import {
 import type { Building } from '../data/buildings'
 import { formatDollars, formatKw } from '../data/format'
 import { costOf, last24Hours, totalKwh, type ActiveSpike } from '../data/simulate'
+import { iconFor } from './buildingIcons'
 
 type Props = {
   building: Building
@@ -41,30 +43,56 @@ export default function BuildingDetail({ building, now, spike, spikeLabel, onBac
   const lastSpiked = points.findLastIndex((point) => point.spiked)
   const shadeEnd = Math.min(lastSpiked + 1, points.length - 1)
 
+  const Icon = iconFor(building.id)
+
   return (
     <div>
-      <button onClick={onBack} className="mb-6 text-sm font-medium text-blue-700 hover:underline">
-        ← All buildings
+      <button
+        onClick={onBack}
+        className="mb-4 flex items-center gap-1 text-sm font-medium text-blue-700 hover:underline"
+      >
+        <ArrowLeft className="size-4" />
+        All buildings
       </button>
 
-      <h2 className="text-2xl font-bold text-slate-900">{building.name}</h2>
-      <p className="text-slate-500">{building.description}</p>
-
-      {children && <div className="mt-6">{children}</div>}
-
-      <div className="mt-6 grid max-w-md grid-cols-2 gap-4">
-        <div>
-          <p className="text-sm text-slate-500">Cost, last 24 hours</p>
-          <p className="text-2xl font-bold text-slate-900 tabular-nums">{formatDollars(costThisWeek)}</p>
+      <div className="flex items-center gap-4 rounded-2xl border border-slate-200 bg-white p-5 shadow-sm">
+        <div className="flex size-14 shrink-0 items-center justify-center rounded-2xl bg-blue-50 text-blue-700">
+          <Icon className="size-7" />
         </div>
         <div>
-          <p className="text-sm text-slate-500">Same hours last week</p>
-          <p className="text-2xl font-bold text-slate-500 tabular-nums">{formatDollars(costLastWeek)}</p>
+          <h2 className="text-2xl font-bold text-slate-900">{building.name}</h2>
+          <p className="text-slate-500">{building.description}</p>
         </div>
       </div>
 
-      <div className="mt-6 rounded-xl border border-slate-200 bg-white p-5 shadow-sm">
-        <h3 className="mb-4 font-semibold text-slate-900">Power use, last 24 hours</h3>
+      {children && <div className="mt-6 space-y-6">{children}</div>}
+
+      <div className="mt-6 grid gap-4 sm:grid-cols-2 lg:max-w-2xl">
+        <div className="flex gap-4 rounded-2xl border border-slate-200 bg-white p-5 shadow-sm">
+          <div className="flex size-12 shrink-0 items-center justify-center rounded-full bg-blue-100 text-blue-700">
+            <DollarSign className="size-6" />
+          </div>
+          <div>
+            <p className="text-sm text-slate-600">Cost, last 24 hours</p>
+            <p className="text-3xl font-bold text-slate-900 tabular-nums">{formatDollars(costThisWeek)}</p>
+          </div>
+        </div>
+        <div className="flex gap-4 rounded-2xl border border-slate-200 bg-white p-5 shadow-sm">
+          <div className="flex size-12 shrink-0 items-center justify-center rounded-full bg-slate-100 text-slate-500">
+            <History className="size-6" />
+          </div>
+          <div>
+            <p className="text-sm text-slate-600">Same hours last week</p>
+            <p className="text-3xl font-bold text-slate-500 tabular-nums">{formatDollars(costLastWeek)}</p>
+          </div>
+        </div>
+      </div>
+
+      <div className="mt-6 rounded-2xl border border-slate-200 bg-white p-5 shadow-sm">
+        <h3 className="mb-4 flex items-center gap-2 font-semibold text-slate-900">
+          <ChartLine className="size-5 text-blue-700" />
+          Power use, last 24 hours
+        </h3>
         <div className="h-80">
           <ResponsiveContainer width="100%" height="100%">
             <LineChart data={points} margin={{ top: 5, right: 20, bottom: 5, left: 10 }}>

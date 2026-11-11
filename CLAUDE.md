@@ -88,7 +88,8 @@ anything I decided. Keep it under 10 lines.)
   alerts (hours ≥30% over last week, $/day ×30 ×365), recommendations, format,
   estimator (Step 9 math; defaults 4 bldgs, $43,000/mo, 8%, $150k setup → ~11-month payback).
 - Hook `useEnergyData`: 3s timer + demo state (scenario, spikeOn, decision, doneIds).
-- `src/components/`: BuildingCard, BuildingDetail (chart), Alert/Ignored/ResolvedBanner, RecommendationList, SavingsSummary, DemoControls, SavingsEstimator.
+- `src/components/`: BuildingCard, BuildingDetail (chart), AlertPanel, Alert/Ignored/ResolvedBanner, RecommendationList, SummaryTiles, DemoControls, SavingsEstimator.
+- Redesign (Nov 11, from a mockup): lucide-react icons OK'd. Choices: styled cards (no map), alert as side panel. R1 done: header + 4 KPI tiles (SummaryTiles replaced SavingsSummary; no sparkline). R2 done: card icons + status pills. R3 done: AlertPanel (status chip + red/gray/green banner or All clear) right of cards on xl, above them on narrow screens; banners now stack vertically. R4 done: detail header card + cost tiles, icons in fixes and estimator; building icons shared in buildingIcons.ts. Redesign complete. Then added CampusMap (decorative lawn, paths, quad, trees, other buildings; hidden on phones) and compact cards (icon, name, kW, pill, small "Today: kWh · $" line).
 - Sizes realistic (~10–15 kWh/sq ft/yr): peaks 1,400/500/800/350 kW. Full-night HVAC ≈ $180/day, $66k/yr.
 - Decided: never random. A fix with fixesProblem ends the spike → green. Finals has none
   (suggested Ignore). Best demo time 7am–10pm (all 3 show full numbers). No 18% claim.

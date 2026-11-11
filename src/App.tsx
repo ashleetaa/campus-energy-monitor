@@ -3,14 +3,17 @@
 
 import { useState } from 'react'
 import AlertBanner from './components/AlertBanner'
+import AlertPanel, { type PanelStatus } from './components/AlertPanel'
 import BuildingCard from './components/BuildingCard'
 import BuildingDetail from './components/BuildingDetail'
+import CampusMap from './components/CampusMap'
 import DemoControls from './components/DemoControls'
 import IgnoredBanner from './components/IgnoredBanner'
 import RecommendationList from './components/RecommendationList'
 import ResolvedBanner from './components/ResolvedBanner'
 import SavingsEstimator from './components/SavingsEstimator'
-import SavingsSummary from './components/SavingsSummary'
+import SummaryTiles from './components/SummaryTiles'
+import { Landmark } from 'lucide-react'
 import type { Alert } from './data/alerts'
 import { useEnergyData } from './hooks/useEnergyData'
 
@@ -54,14 +57,29 @@ export default function App() {
       />
     ) : null
 
+  // What the dashboard's alert panel shows: red if any alert still needs a
+  // decision, gray if it was ignored, green once fixed, otherwise "All clear".
+  const panelStatus: PanelStatus = alerts.some((alert) => !isIgnored(alert.building.id))
+    ? 'attention'
+    : alerts.length > 0
+      ? 'ignored'
+      : energy.resolved && spikeAlert
+        ? 'resolved'
+        : 'clear'
+
   return (
-    <main className="min-h-screen bg-slate-50 p-6 md:p-10">
-      <header className="mb-8 flex flex-wrap items-start justify-between gap-4">
-        <div>
-          <h1 className="text-3xl font-bold text-slate-900">Campus Energy Monitor</h1>
-          <p className="mt-1 text-slate-600">
-            Live power use across campus · Updated {now.toLocaleTimeString('en-US')}
-          </p>
+    <main className="min-h-screen bg-gradient-to-b from-slate-50 to-blue-50 p-4 md:p-10">
+      <header className="mb-8 flex flex-wrap items-center justify-between gap-4">
+        <div className="flex items-center gap-4">
+          <div className="flex size-14 items-center justify-center rounded-2xl bg-blue-100 text-blue-800 shadow-sm">
+            <Landmark className="size-7" />
+          </div>
+          <div>
+            <h1 className="text-3xl font-bold text-slate-900">Campus Energy Monitor</h1>
+            <p className="mt-1 text-slate-600">
+              Live power use across campus · Updated {now.toLocaleTimeString('en-US')}
+            </p>
+          </div>
         </div>
         {tab === 'monitor' && (
           <DemoControls
@@ -117,24 +135,37 @@ export default function App() {
       ) : (
         <>
           {/* Ignored fixes don't count as savings available. */}
-          <SavingsSummary
+          <SummaryTiles
+            campusKw={readings.reduce((sum, reading) => sum + reading.kw, 0)}
+            activeAlerts={alerts.filter((alert) => !isIgnored(alert.building.id)).length}
             recommendations={energy.decision === 'ignored' ? [] : recommendations}
             doneIds={energy.doneIds}
           />
 
-          {alerts.map((alert) => banner(alert, true))}
-          {resolvedBanner(true)}
+          {/* Wide screens: cards on the left (2 of 3 columns), alert panel on the right.
+              Narrow screens: alert panel first, so the money comes before the details. */}
+          <div className="grid gap-6 xl:grid-cols-3">
+            <div className="xl:order-2">
+              <AlertPanel status={panelStatus}>
+                {alerts.map((alert) => banner(alert, true))}
+                {resolvedBanner(true)}
+              </AlertPanel>
+            </div>
 
-          <div className="grid gap-6 sm:grid-cols-2 xl:grid-cols-4">
-            {readings.map((reading) => (
-              <BuildingCard
-                key={reading.building.id}
-                reading={reading}
-                needsAttention={alertFor(reading.building.id) !== undefined && !isIgnored(reading.building.id)}
-                ignored={alertFor(reading.building.id) !== undefined && isIgnored(reading.building.id)}
-                onClick={() => setSelectedId(reading.building.id)}
-              />
-            ))}
+            <div className="xl:order-1 xl:col-span-2">
+              <CampusMap>
+                {readings.map((reading) => (
+                  <BuildingCard
+                    key={reading.building.id}
+                    reading={reading}
+                    needsAttention={alertFor(reading.building.id) !== undefined && !isIgnored(reading.building.id)}
+                    ignored={alertFor(reading.building.id) !== undefined && isIgnored(reading.building.id)}
+                    percentAbove={alertFor(reading.building.id)?.percentAbove ?? null}
+                    onClick={() => setSelectedId(reading.building.id)}
+                  />
+                ))}
+              </CampusMap>
+            </div>
           </div>
         </>
       )}
