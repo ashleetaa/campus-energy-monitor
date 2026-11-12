@@ -14,7 +14,7 @@ import RecommendationList from './components/RecommendationList'
 import ResolvedBanner from './components/ResolvedBanner'
 import SavingsEstimator from './components/SavingsEstimator'
 import SummaryTiles from './components/SummaryTiles'
-import { Leaf } from 'lucide-react'
+import { Sprout } from 'lucide-react'
 import type { Alert } from './data/alerts'
 import { useEnergyData } from './hooks/useEnergyData'
 
@@ -70,17 +70,17 @@ export default function App() {
 
   return (
     <main className="min-h-screen bg-gradient-to-b from-slate-50 to-blue-50 p-4 md:p-10">
-      <header className="mb-8 flex flex-wrap items-center justify-between gap-4">
-        <div className="flex items-center gap-4">
-          <div className="flex size-14 items-center justify-center rounded-2xl bg-green-100 text-green-700 shadow-sm">
-            <Leaf className="size-7" />
-          </div>
-          <div>
-            <h1 className="font-brand text-4xl font-semibold text-slate-900">Verdant</h1>
-            <p className="mt-1 text-slate-600">
+      {/* The dark Verdant banner across the top, with the demo controls on the right.
+          The negative margins cancel the page padding, so it runs edge to edge. */}
+      <header className="-mx-4 -mt-4 mb-8 flex flex-wrap items-center justify-between gap-4 bg-[#1b2a2e] px-4 py-5 md:-mx-10 md:-mt-10 md:px-10">
+        <div>
+          <h1 className="font-brand flex items-center gap-3 text-4xl font-semibold tracking-wider text-white uppercase">
+            <Sprout className="size-7 text-green-300" />
+            Verdant
+          </h1>
+          <p className="mt-1 text-slate-300">
               Campus energy monitor · Updated {now.toLocaleTimeString('en-US')}
-            </p>
-          </div>
+          </p>
         </div>
         {tab === 'monitor' && (
           <DemoControls

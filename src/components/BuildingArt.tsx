@@ -226,7 +226,14 @@ function BuildingArt({ buildingId }: { buildingId: string }) {
   ]
 
   return (
-    <svg viewBox={`${minX} ${minY} ${maxX - minX} ${maxY - minY}`} className="w-full" aria-hidden="true">
+    // "xMidYMax meet": fit inside the box and sit on its bottom edge, so every
+    // building stands on the same line no matter its shape.
+    <svg
+      viewBox={`${minX} ${minY} ${maxX - minX} ${maxY - minY}`}
+      preserveAspectRatio="xMidYMax meet"
+      className="size-full"
+      aria-hidden="true"
+    >
       {/* soft shadow on the ground */}
       <ellipse cx={(minX + maxX) / 2} cy={maxY - 10} rx={(maxX - minX) / 2.1} ry={10} fill="#15803d" opacity={0.1} />
       {parts.map((part, i) => (
@@ -243,16 +250,17 @@ function BuildingArt({ buildingId }: { buildingId: string }) {
 }
 
 // One spot on the map: the building drawing with its card on top, overlapping
-// the bottom of the drawing. `mirror` flips the drawing so buildings in the
+// the bottom of the drawing. Every drawing gets the same height, so the cards
+// line up. `mirror` flips the drawing so buildings in the
 // left column face right, toward the middle of the map. On phones only the
 // card shows.
 export function MapSpot({ buildingId, mirror, children }: { buildingId: string; mirror: boolean; children: ReactNode }) {
   return (
     <div className="flex flex-col">
-      <div className={`pointer-events-none mx-auto -mb-10 hidden w-full max-w-72 sm:block ${mirror ? '-scale-x-100' : ''}`}>
+      <div className={`pointer-events-none -mb-3 hidden h-44 sm:block ${mirror ? '-scale-x-100' : ''}`}>
         <BuildingArt buildingId={buildingId} />
       </div>
-      <div className="relative">{children}</div>
+      <div className="relative flex-1">{children}</div>
     </div>
   )
 }

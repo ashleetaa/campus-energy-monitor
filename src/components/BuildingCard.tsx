@@ -56,18 +56,19 @@ export default function BuildingCard({ reading, needsAttention, ignored, percent
     <button
       onClick={onClick}
       title="View 24-hour history"
-      className={`flex items-start gap-4 rounded-2xl border-2 p-4 text-left shadow-md transition hover:-translate-y-0.5 hover:shadow-lg ${look}`}
+      className={`flex size-full items-start gap-4 rounded-2xl border-2 p-4 text-left shadow-md transition hover:-translate-y-0.5 hover:shadow-lg ${look}`}
     >
       <Icon className={`mt-1 size-9 shrink-0 ${iconColor}`} strokeWidth={1.75} />
       <div className="min-w-0 flex-1">
-        <h2 className="leading-snug font-semibold text-slate-900">{building.name}</h2>
+        {/* Room for two lines, so cards are the same size even when a name is short. */}
+        <h2 className="min-h-[2lh] leading-snug font-semibold text-slate-900">{building.name}</h2>
         <p className="text-3xl font-bold text-slate-900 tabular-nums">{formatKw(kw)}</p>
-        <div className="mt-2 flex flex-wrap items-center gap-x-3 gap-y-1">
+        <div className="mt-2">
           <StatusPill needsAttention={needsAttention} ignored={ignored} percentAbove={percentAbove} />
-          <span className="text-xs text-slate-500 tabular-nums">
-            Today: {formatKwh(kwh)} · {formatDollars(cost)}
-          </span>
         </div>
+        <p className="mt-1.5 text-xs text-slate-500 tabular-nums">
+          Today: {formatKwh(kwh)} · {formatDollars(cost)}
+        </p>
       </div>
     </button>
   )
