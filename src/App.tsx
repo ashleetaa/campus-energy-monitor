@@ -73,15 +73,15 @@ export default function App() {
       {/* The dark Verdant banner across the top, with the demo controls on the right.
           The negative margins cancel the page padding, so it runs edge to edge. */}
       <header className="-mx-4 -mt-4 mb-8 flex flex-wrap items-center justify-between gap-4 bg-[#1b2a2e] px-4 py-5 md:-mx-10 md:-mt-10 md:px-10">
-        <div>
-          <h1 className="font-brand flex items-center gap-3 text-4xl font-semibold tracking-wider text-white uppercase">
-            <Sprout className="size-7 text-green-300" />
-            Verdant
-          </h1>
-          {/* pl-10 = icon width + gap, so this line starts under the "V" of VERDANT */}
-          <p className="mt-1 pl-10 text-slate-300">
+        {/* Big sprout icon on the left, as tall as the name and the line under it. */}
+        <div className="flex items-center gap-4">
+          <Sprout className="size-14 shrink-0 text-green-300" strokeWidth={1.75} />
+          <div>
+            <h1 className="font-brand text-4xl font-semibold tracking-wider text-white uppercase">Verdant</h1>
+            <p className="mt-1 text-slate-300">
               Campus energy monitor · Updated {now.toLocaleTimeString('en-US')}
-          </p>
+            </p>
+          </div>
         </div>
         {tab === 'monitor' && (
           <DemoControls
