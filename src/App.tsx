@@ -78,7 +78,8 @@ export default function App() {
             <Sprout className="size-7 text-green-300" />
             Verdant
           </h1>
-          <p className="mt-1 text-slate-300">
+          {/* pl-10 = icon width + gap, so this line starts under the "V" of VERDANT */}
+          <p className="mt-1 pl-10 text-slate-300">
               Campus energy monitor · Updated {now.toLocaleTimeString('en-US')}
           </p>
         </div>

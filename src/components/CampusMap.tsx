@@ -1,5 +1,5 @@
 // The "Campus energy map" box on the dashboard: a simple drawing of a lawn,
-// walking paths, trees, other campus buildings and a quad in the middle, with
+// walking paths, trees and a quad in the middle, with
 // the 4 building cards placed on top (passed in as children). The drawing is
 // decoration only, not the real campus layout. On phones it's hidden and only
 // the cards show.
@@ -29,14 +29,6 @@ const TREES = [
   { left: 53, top: 92, size: 34 },
   { left: 22, top: 50, size: 24 },
   { left: 78, top: 50, size: 24 },
-]
-
-// Pale outlines of other campus buildings along the left and right edges.
-const OTHER_BUILDINGS = [
-  { left: 0, top: 14, width: 3.5, height: 22 },
-  { left: 0, top: 66, width: 3.5, height: 18 },
-  { left: 96.5, top: 16, width: 3.5, height: 20 },
-  { left: 96.5, top: 64, width: 3.5, height: 22 },
 ]
 
 // One tree: a round forest-green top on a short brown trunk.
@@ -73,14 +65,6 @@ export default function CampusMap({ children }: { children: ReactNode }) {
               <line x1="75" y1="0" x2="25" y2="100" vectorEffect="non-scaling-stroke" />
             </g>
           </svg>
-
-          {OTHER_BUILDINGS.map((b, i) => (
-            <div
-              key={i}
-              className="absolute rounded-md border border-slate-200 bg-slate-50"
-              style={{ left: `${b.left}%`, top: `${b.top}%`, width: `${b.width}%`, height: `${b.height}%` }}
-            />
-          ))}
 
           {/* The quad: a green square turned 45° where the paths meet. */}
           <div className="absolute top-1/2 left-1/2 size-32 -translate-x-1/2 -translate-y-1/2 rotate-45 rounded-2xl border-[6px] border-white/90 bg-[#d6ecd2]" />
