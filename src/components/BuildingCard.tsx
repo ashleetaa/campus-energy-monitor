@@ -18,9 +18,9 @@ type Props = {
 function StatusPill({ needsAttention, ignored, percentAbove }: Omit<Props, 'reading' | 'onClick'>) {
   if (needsAttention) {
     return (
-      <span className="inline-flex items-center gap-1 rounded-full bg-red-100 px-2.5 py-1 text-xs font-semibold text-red-700">
+      <span className="inline-flex items-center gap-1 rounded-full bg-red-100 px-2.5 py-1 text-xs font-semibold whitespace-nowrap text-red-700">
         <ArrowUp className="size-3.5" />
-        {percentAbove !== null ? `+${percentAbove}%` : 'Needs attention'}
+        Needs attention{percentAbove !== null && ` · +${percentAbove}%`}
       </span>
     )
   }
@@ -56,9 +56,9 @@ export default function BuildingCard({ reading, needsAttention, ignored, percent
     <button
       onClick={onClick}
       title="View 24-hour history"
-      className={`flex size-full items-start gap-4 rounded-2xl border-2 p-4 text-left shadow-md transition hover:-translate-y-0.5 hover:shadow-lg ${look}`}
+      className={`flex size-full items-start gap-3 rounded-2xl border-2 p-4 text-left shadow-md transition hover:-translate-y-0.5 hover:shadow-lg ${look}`}
     >
-      <Icon className={`mt-1 size-9 shrink-0 ${iconColor}`} strokeWidth={1.75} />
+      <Icon className={`mt-1 size-8 shrink-0 ${iconColor}`} strokeWidth={1.75} />
       <div className="min-w-0 flex-1">
         {/* Room for two lines, so cards are the same size even when a name is short. */}
         <h2 className="min-h-[2lh] leading-snug font-semibold text-slate-900">{building.name}</h2>

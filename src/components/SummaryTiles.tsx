@@ -49,7 +49,7 @@ export default function SummaryTiles({ campusKw, activeAlerts, recommendations, 
   const open = ignored ? [] : recommendations.filter((rec) => !doneIds.includes(rec.id))
 
   return (
-    <section className="mb-6 grid gap-4 sm:grid-cols-2 xl:grid-cols-4">
+    <section className="mb-6 grid auto-rows-fr gap-4 sm:grid-cols-2 xl:grid-cols-4">
       <Tile icon={Zap} color="bg-blue-100 text-blue-700" tint="bg-white" label="Campus power" note="All 4 buildings combined">
         <p className="text-3xl font-bold text-slate-900 tabular-nums">{formatKw(campusKw)}</p>
       </Tile>

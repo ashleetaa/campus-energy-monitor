@@ -91,7 +91,7 @@ export default function CampusMap({ children }: { children: ReactNode }) {
         </div>
 
         {/* The building cards, spaced apart so the lawn, paths and quad show around them. */}
-        <div className="relative grid gap-4 sm:auto-rows-fr sm:grid-cols-2 sm:gap-x-32 sm:gap-y-8 sm:px-14 sm:py-6">
+        <div className="relative grid gap-4 sm:auto-rows-fr sm:grid-cols-2 sm:gap-x-20 sm:gap-y-8 sm:px-10 sm:py-6">
           {children}
         </div>
       </div>

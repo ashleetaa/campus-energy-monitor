@@ -84,18 +84,14 @@ recommends a fix. The pitch uses the dollar amount the app calculates.
 ## Progress
 (Claude: after each step, update this list: what's done, what files matter,
 anything I decided. Keep it under 10 lines.)
-- Steps 0–9 done + reliability checks. Vite 8, React 19, TS, Tailwind v4, Recharts 3.
-- `src/data/`: buildings, simulate (kW/kWh/cost, ±3% fixed history wobble, `ActiveSpike`),
-  scenarios (3 fixed scenarios: building, hours, extra %, root cause, suggestion, fixes),
-  alerts (hours ≥30% over last week, $/day ×30 ×365), recommendations, format,
-  estimator (Step 9 math; defaults 4 bldgs, $43,000/mo, 8%, $150k setup → ~11-month payback).
-- Hook `useEnergyData`: 3s timer + demo state (scenario, spikeOn, decision, doneIds).
-- `src/components/`: BuildingCard, BuildingDetail (chart), AlertPanel, Alert/Ignored/ResolvedBanner, RecommendationList, SummaryTiles, DemoControls, SavingsEstimator.
-- Redesign (Nov 11, from a mockup): lucide-react icons OK'd. Choices: styled cards (no map), alert as side panel. R1 done: header + 4 KPI tiles (SummaryTiles replaced SavingsSummary; no sparkline). R2 done: card icons + status pills. R3 done: AlertPanel (status chip + red/gray/green banner or All clear) right of cards on xl, above them on narrow screens; banners now stack vertically. R4 done: detail header card + cost tiles, icons in fixes and estimator; building icons shared in buildingIcons.ts. Redesign complete. Then added CampusMap (decorative lawn, paths, quad, trees, other buildings; hidden on phones) and compact cards (icon, name, kW, pill, small "Today: kWh · $" line). BuildingArt.tsx: SVG isometric building above each card (MapSpot); no quad text. Name: Verdant, shown in a dark teal header banner (sprout icon, uppercase Fraunces serif from Google Fonts, Georgia fallback).
-- Sizes realistic (~10–15 kWh/sq ft/yr): peaks 1,400/500/800/350 kW. Full-night HVAC ≈ $180/day, $66k/yr.
-- Decided: fixes already marked done still count as savings achieved after Ignore.
-- Decided: never random. A fix with fixesProblem ends the spike → green. Finals has none
-  (suggested Ignore). Best demo time 7am–10pm (all 3 show full numbers). No 18% claim.
+- Steps 0–9 done + redesign + final QA (Nov 11). Vite 8, React 19, TS, Tailwind v4, Recharts 3, lucide-react (OK'd).
+- `src/data/`: buildings, simulate, scenarios (3 fixed), alerts (≥30% over last week), recommendations, format, estimator.
+- Hook `useEnergyData`: 3s timer + demo state (scenario: none until picked, spikeOn, decision, doneIds).
+- Dashboard: Verdant banner (Fraunces, Georgia fallback) + DemoControls → SummaryTiles → CampusMap (MapSpot =
+  BuildingArt SVG + BuildingCard; left column mirrored) + AlertPanel (All clear/red/gray/green banners).
+- Detail: BuildingDetail chart + RecommendationList. Estimator: 4 bldgs, $43,000/mo, 8%, $150k → ~11 months.
+- Numbers: peaks 1,400/500/800/350 kW. HVAC ≈ $180/day, $5,390/mo, $66k/yr. Best demo time 7am–10pm.
+- Decided: never random; fixesProblem fix → green; Finals suggests Ignore (no fix); done fixes still count after Ignore.
 
 ## Open items
 - Repo: github.com/ashleetaa/campus-energy-monitor (push to `main`; keep the Claude co-author line).
